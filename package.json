@@ -1,0 +1,36 @@
+{
+  "name": "gitaclue",
+  "version": "1.0.0",
+  "description": "GitHub Information Extraction Library",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "dependencies": {
+    "axios": "^0.18.0",
+    "babel-core": "^6.26.0",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
+    "babel-preset-es2015": "^6.24.1",
+    "chai": "^4.1.2"
+  },
+  "devDependencies": {
+    "mocha": "^5.0.4"
+  },
+  "scripts": {
+    "test": "mocha --reporter min --require ./test/helper.js '+(test|validate)/**/*Spec.js'"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jdmedlock/GitAClue.git"
+  },
+  "keywords": [
+    "github",
+    "api"
+  ],
+  "author": "Jim Medlock",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jdmedlock/GitAClue/issues"
+  },
+  "homepage": "https://github.com/jdmedlock/GitAClue#readme"
+}
