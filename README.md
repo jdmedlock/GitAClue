@@ -1,2 +1,3 @@
-# GitAClue
-GitHub Information Extraction Library
+# GitAClue - GitHub Information Extraction Library
+
+TBD
