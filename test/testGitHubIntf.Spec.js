@@ -3,8 +3,6 @@ require('./registerBabel');
 import GitHubInterface from '../src/GitHubInterface.js';
 import assert from 'assert';
 
-let ghintf = new GitHubInterface();
-
 describe('Test GitHubIntf.js functions', function () {
   /**
    * Test the fetchFromApi() function
@@ -15,7 +13,7 @@ describe('Test GitHubIntf.js functions', function () {
       GitHubInterface.fetchFromApi('https://api.github.com/repos/chingu-voyage4/Bears-Team-1/contributors')
       .then((response) => {
         repoContributors = response.data;
-        console.log('repoContributors: ', repoContributors);
+        // console.log('repoContributors: ', repoContributors);
         assert.equal(repoContributors[0].login, 'jordanleo7');
       });
     });
