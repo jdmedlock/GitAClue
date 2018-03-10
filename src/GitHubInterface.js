@@ -1,4 +1,5 @@
-import axios from "axios";
+import axios from 'axios';
+import validator from 'validator';
 
 export default class GitHubInterface {
 
@@ -10,6 +11,10 @@ export default class GitHubInterface {
  * @memberof GitHubInterface
  */
 static async fetchFromApi(apiUrl) {
+    if (!validator.isURL(apiUrl)) {
+      console.log('I threw up');
+      throw new Error(`fetchFromAPI invalid apiUrl. apiUrl: ${apiUrl}`);
+    }
     return await axios.get(apiUrl);
   }
 
