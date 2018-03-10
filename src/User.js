@@ -25,6 +25,7 @@ export default class User {
     await GitHubInterface.fetchFromApi(this.apiUrl)
     .then(response => {
       this.id = response.data.id;
+      this.name = response.data.login;
       this.avatar_url = response.data.avatar_url;
       this.html_url = response.data.html_url;
       this.type = response.data.type;

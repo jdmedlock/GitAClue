@@ -28,41 +28,23 @@ export default class Contributors {
    * @memberof Contributors
    */
   async fetchAllContributorsInfo() {
-    let userPromises = [];
-    const contributorInfo = {};
-
     await GitHubInterface.fetchFromApi(this.apiUrl)
     .then(response => {
       response.data.forEach(element => {
-        contributorInfo.id = element.id;
-        contributorInfo.login = element.login;
-
-        let userStatus = null;
-        let userPromise = new Promise((resolve, reject) => {
-          userStatus = ({resolve: resolve, reject: reject});
-        });
-        userPromises.push(userPromise);
-  
+        console.log(`Processing contributing user: ${element.login}`);
         const userObject = new User(element.login);
+        this.contributors.push(userObject);
         userObject.fetchUserInfo()
-        .then(user => {
-          console.log(`user: ${user}`);
-          contributorInfo.details = user;
-          userStatus.resolve(`Completed: ${user}`);
-        });        
+        .then(() => {
+          console.log(`Finished fetching user`);
+        });
       });
     })
     .catch(reason => {
       throw new Error(`fetchContributorsInfo promise rejection. Reason: ${reason}`);
     });
 
-    Promise.all(userPromises)
-    .then(() => {
-      console.log('userPromises: ', userPromises);
-      this.contributors.push(contributorInfo);
-  
     return true;
-    })
   }
 
 }
