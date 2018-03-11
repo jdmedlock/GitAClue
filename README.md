@@ -83,7 +83,8 @@ const ghInfo = citaclue.get([
 
 ## Contributing
 
-*_TBD_*
+See [Contributing](https://github.com/jdmedlock/GitAClue/blob/development/CONTRIBUTING.md)
+and our [Collaborator Guide](https://github.com/jdmedlock/GitAClue/blob/development/COLLABORATOR_GUIDE.md).
 
 ## Authors
 
