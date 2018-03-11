@@ -46,7 +46,6 @@ export default class Repo {
     .catch(reason => {
       throw new Error(`fetchRepoInfo promise rejection. Reason: ${reason}`);
     });
-
   }
 
 }

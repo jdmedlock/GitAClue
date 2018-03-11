@@ -18,7 +18,7 @@ _TBD_
 
 ### Git Branches
 
-![GitAClue Git Workflow](https://github.com/ShowMeCoders/GitAClue/blob/master/docs/Git%20-%20Team%20Workflow.png)
+![GitAClue Git Workflow](https://github.com/jdmedlock/GitAClue/blob/master/docs/Git%20-%20Team%20Workflow.png)
 
 - `master`: Only updated from PR's from the `development` branch for release. This
 branch always reflects the current production release.
