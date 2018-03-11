@@ -7,20 +7,15 @@ describe('Test Repo.js functions', function () {
   /**
    * Test the fetchFromApi() function
    */
-  describe('Test the instantiation of the Repo class via its constructor function', function () {    
-    it('should return a Repo object instance with instance variables populated from GitHub', function () {
+  describe('Test the instantiation of the Repo class via its constructor function', async function () {    
+    it('should return a Repo object instance with instance variables populated from GitHub', async function () {
       const repoObject = new Repo('chingu-voyage4', 'Bears-Team-1');
-      repoObject.fetchRepoInfo()
-      .then(response => {
-        console.log('\nRepo Info:');
-        console.log('------------');
-        console.log(repoObject);
-        console.log('\n');
-        assert.equal(repoObject.id, 121866033);
-      })
-      .catch(reason => {
-        console.log(`Promise failure. reason: ${reason}`);
-      });
+      await repoObject.fetchRepoInfo();
+      console.log('\nRepo Info:');
+      console.log('------------');
+      console.log(repoObject);
+      console.log('\n');
+      assert.equal(repoObject.id, 121866033);
     });
   });
 

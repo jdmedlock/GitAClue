@@ -3,15 +3,15 @@ require('./registerBabel');
 import GitHubInterface from '../src/GitHubInterface.js';
 import { assert, expect } from 'chai';
 
-describe('Test GitHubIntf.js functions', function () {
+describe('Test GitHubIntf.js functions', async function () {
   /**
    * Test the fetchFromApi() function
    */
-  const invalidApiUrl = 'xxxx:/api.github.com/repos/chingu-voyage4/Bears-Team-1/contributors';
-  const validApiUrl = 'https://api.github.com/repos/chingu-voyage4/Bears-Team-1/contributors';
+  const invalidApiUrl = 'xxxx:/api.github.com/repos/chingu-voyage4/Bears-Team-2/contributors';
+  const validApiUrl = 'https://api.github.com/repos/chingu-voyage4/Bears-Team-2/contributors';
   let repoContributors = [];
 
-  describe('Test the fetchFromApi function', function () {
+  describe('Test the fetchFromApi function', async function () {
 
     // TODO: Research Mocha/Chai assertions against async functions. The following test is not
     // catching the error thrown by the fetchFromApi function.
@@ -24,11 +24,11 @@ describe('Test GitHubIntf.js functions', function () {
     });
     */
 
-    it('should return a JSON string containing all repo contributors', function () {
+    it('should return a JSON string containing all repo contributors', async function () {
       GitHubInterface.fetchFromApi(validApiUrl)
       .then((response) => {
         repoContributors = response.data;
-        assert.equal(repoContributors[0].login, 'jordanleo7');
+        assert.equal(repoContributors[0].login, 'jdmedlock');
       });
     });
   });

@@ -15,7 +15,13 @@ static async fetchFromApi(apiUrl) {
       console.log('I threw up');
       throw new Error(`fetchFromAPI invalid apiUrl. apiUrl: ${apiUrl}`);
     }
-    return await axios.get(apiUrl);
+    return await axios.get(apiUrl,
+      {
+        auth: {
+          username: 'jdmedlock',
+          password: 'k1yj03y1'
+        }
+      });
   }
 
 }
