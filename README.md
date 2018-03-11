@@ -43,6 +43,11 @@ and one context name may be specified in each entry.
 Not all segments may be used with a given context. Consult the following table for
 the valid combinations of context and segment values.
 
+| Context Name | Valid Segment Names |
+|:-------------|:--------------------|
+| user         | N/a                 |
+| repo         | contributors        |
+
 ### Return Value
 GitAClue returns a JSON string of the following format:
 ```
