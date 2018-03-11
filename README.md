@@ -1,20 +1,34 @@
 # GitAClue - GitHub Information Extraction Library
 
-GitAClue provides the Javascript developer with access to various GitHub data and metrics. Despite the fact that GitHub's API makes it to access this information, GitAClue makes even simpler by insulating the caller from this API and by organizing the resulting data in the form of objects familiar to Javascript developers.
+GitAClue provides the Javascript developer with access to various GitHub data
+and metrics. Despite the fact that GitHub's API makes it to access this
+information, GitAClue makes even simpler by insulating the caller from this
+API and by organizing the resulting data in the form of objects familiar to
+Javascript developers.
 
-GitAClue is opinionated in that it provides access the most frequently required data rather than all of the data available through the GitHub API. 
+GitAClue is opinionated in that it provides access the most frequently required
+data rather than all of the data available through the GitHub API. 
 
-[Features](#features) | [Installation](#installation) |[Development](#development) | [Authors](#authors) |
+[Installation](#installation) | [Usage](#usage) |[Contributing](#contributing) | [Authors](#authors) |
 [License](#license)
-
-## Features
-
-_TBD_
 
 ## Installation
 
 _TBD_
-## Development
+
+## Usage
+
+Requests are made by calling `gitaclue.get(context, contextName, segments)`
+which returns a JSON document containing the requested information. 
+
+The `context` parameter is a string that names the starting point for the
+requested GitHub information and `contextName` identifies which context to be
+retrieved. For example, a context of 'repo' and a contextName of 'GitAClue'
+establishes a the anchor to be the repo named 'GitAClue'.
+
+
+
+## Contributing
 
 ### Git Branches
 
