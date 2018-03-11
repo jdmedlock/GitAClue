@@ -1,4 +1,5 @@
 import axios from 'axios';
+import dotenv from 'dotenv';
 import validator from 'validator';
 
 export default class GitHubInterface {
@@ -11,17 +12,18 @@ export default class GitHubInterface {
  * @memberof GitHubInterface
  */
 static async fetchFromApi(apiUrl) {
-    if (!validator.isURL(apiUrl)) {
-      console.log('I threw up');
-      throw new Error(`fetchFromAPI invalid apiUrl. apiUrl: ${apiUrl}`);
-    }
-    return await axios.get(apiUrl,
-      {
-        auth: {
-          username: 'xxxxxxxx',
-          password: 'xxxxxxxx'
-        }
-      });
+  if (!validator.isURL(apiUrl)) {
+    console.log('I threw up');
+    throw new Error(`fetchFromAPI invalid apiUrl. apiUrl: ${apiUrl}`);
+  }
+  dotenv.config();
+  return await axios.get(apiUrl,
+    {
+      auth: {
+        username: process.env.GITHUB_USERID,
+        password: process.env.GITHUB_PASSWD
+      }
+    });
   }
 
 }
