@@ -13,7 +13,6 @@ export default class GitHubInterface {
  */
 static async fetchFromApi(apiUrl) {
   if (!validator.isURL(apiUrl)) {
-    console.log('I threw up');
     throw new Error(`fetchFromAPI invalid apiUrl. apiUrl: ${apiUrl}`);
   }
   dotenv.config();

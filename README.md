@@ -9,7 +9,9 @@ Javascript developers.
 GitAClue is opinionated in that it provides access the most frequently required
 data rather than all of the data available through the GitHub API. 
 
-[Installation](#installation) | [Usage](#usage) |[Contributing](#contributing) | [Authors](#authors) |
+[Installation](#installation) | [Usage](#usage) |
+[Release Notes](#release-notes) | [Contributing](#contributing) | 
+[Authors](#authors) |
 [License](#license)
 
 ## Installation
@@ -27,8 +29,8 @@ which returns a JSON document containing the requested information.
 it will be returned in resulting JSON document.
 ```
 [
-  {context: 'context-id', contextName: 'context-name', segments: ['segment-list']},
-  {context: 'context-id', contextName: 'context-name', segments: ['segment-list']},
+  {context: 'context-id', contextName: 'context-name', segments: ['segment1', ...]},
+  {context: 'context-id', contextName: 'context-name', segments: ['segment1', ...]},
   ...
 ]
 ```
@@ -40,7 +42,8 @@ establishes a the anchor to be the repo named 'GitAClue'. Only one context value
 and one context name may be specified in each entry.
 
 `segments` is a list of zero or more sets of information associated with a context.
-Not all segments may be used with a given context. Consult the following table for
+Not all segments may be used with a given context. The same segment may be
+repeated in more than one context. Consult the following table for
 the valid combinations of context and segment values.
 
 | Context Name | Valid Segment Names |
@@ -80,6 +83,9 @@ const ghInfo = citaclue.get([
   {context: 'user', contextName: 'jdmedlock', segments: []},
 ]);
 ```
+## Release Notes
+
+For more information see [Release Notes](https://github.com/jdmedlock/GitAClue/blob/development/CHANGELOG.md)
 
 ## Contributing
 
