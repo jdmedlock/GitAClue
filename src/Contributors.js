@@ -1,6 +1,10 @@
 import GitHubInterface from './GitHubInterface.js';
 import User from './User.js';
-
+/**
+ * @description Extract repo contributors from GitHub
+ * @export
+ * @class Contributors
+ */
 export default class Contributors {
 
   /**

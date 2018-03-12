@@ -1,5 +1,10 @@
-import GitHubInterface from './GitHubInterface.js';
+import GitHubInterface from './GitHubInterface';
 
+/**
+ * @description Extract Repo information from GitHub
+ * @export
+ * @class Repo
+ */
 export default class Repo {
   /**
    * @description Creates an instance of the Repo class.
@@ -8,10 +13,10 @@ export default class Repo {
    * @memberof Repo
    */
   constructor(ownerName, repoName) {
-    if (ownerName === null || ownerName === undefined || typeof ownerName != 'string' ) {
+    if (ownerName === null || ownerName === undefined || typeof ownerName !== 'string') {
       throw new Error(`Expected string value for ownerName parameter. Received: ${ownerName}`);
     }
-    if (repoName === null || repoName === undefined || typeof repoName != 'string' ) {
+    if (repoName === null || repoName === undefined || typeof repoName !== 'string') {
       throw new Error(`Expected string value for repoName parameter. Received: ${repoName}`);
     }
     this.name = repoName;
@@ -21,12 +26,10 @@ export default class Repo {
 
   /**
    * @description Retrieve repo information from GitHub
-   * @returns {Promise} A promise that will be fulfilled with the operation is complete.
    * @memberof Repo
    */
   async fetchRepoInfo() {
-    await GitHubInterface.fetchFromApi(this.apiUrl)
-    .then(response => {
+    await GitHubInterface.fetchFromApi(this.apiUrl).then((response) => {
       this.id = response.data.id;
       this.description = response.data.description;
       this.html_url = response.data.html_url;
@@ -42,10 +45,8 @@ export default class Repo {
       this.license = response.data.license;
       this.noForks = response.data.forks_count;
       return true;
-    })
-    .catch(reason => {
+    }).catch((reason) => {
       throw new Error(`fetchRepoInfo promise rejection. Reason: ${reason}`);
     });
   }
-
 }
