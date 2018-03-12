@@ -9,6 +9,8 @@ const contextSegments = [
   {context: 'user', segments: []}
 ];
 
+let resultJSON = {};
+
 /**
  * @description Retrieve a set of contexts and segments from the GitHub API
  * @param {Object} options an object containing context and segment names
@@ -23,12 +25,8 @@ const contextSegments = [
  * parameter.
  */
 function get(options) {
-  if (!validateOptions(options)) {
-    return null;
-  }
-
-  // TODO: For testing only. Replace with real code later.
-  return '';
+  validateOptions(options);
+  return resultJSON;
 }
 
 /**
@@ -38,16 +36,27 @@ function get(options) {
  */
 function validateOptions(options) {
   if (options === null || options === undefined || typeof options != 'object') {
+    resultJSON.error = 'option parameter is null, undefined, or not an object';
     return false;
   }
 
   for (const prop in options) {
     const contextType = options[prop].context;
+    const contextName = options[prop].contextName;
+    if (contextName === null || contextName === undefined || typeof contextName !== 'string') {
+      resultJSON.error = 'contextName is null, undefined, or not a string';
+      return false;
+    }
+
     const matchingContextEntry = isContextValid(contextType);
+    if (matchingContextEntry === null) {
+      return false;
+    }
+
     const segments = options[prop].segments;
     const errorSegments = !isSegmentsValid(matchingContextEntry, segments)
-    if (matchingContextEntry === null || errorSegments.length > 0) {
-      console.log('Invalid segments: ', errorSegments);
+    if (errorSegments.length > 0) {
+      resultJSON.error = 'Invalid segments: ' + errorSegments;
       return false;
     }
   }
@@ -61,12 +70,17 @@ function validateOptions(options) {
  * null.
  */
 function isContextValid(contextType) {
+  if (contextType === null || contextType === undefined || typeof contextType !== 'string') {
+    resultJSON.error = 'context is null, undefined, or not a string';
+    return null;
+  }
   for (let i = 0; i < contextSegments.length; i++) {
     if (contextSegments[i].context === contextType) {
       return contextSegments[i];
     }
   }
-  return null;
+  resultJSON.error = 'unknown context specified';
+return null;
 }
 
 /**
@@ -81,6 +95,7 @@ function isSegmentsValid(matchingContextEntry, optSegments) {
     return errorSegments;
   }
   if (typeof optSegments !== 'object') {
+    resultJSON.error = 'segments is not an array';
     return errorSegments.push('Not an object');
   }
 
@@ -92,6 +107,9 @@ function isSegmentsValid(matchingContextEntry, optSegments) {
     if (matchingContextSegments.indexOf(optSegments[i]) === -1) {
       errorSegments.push(optSegments[i]);
     }
+  }
+  if (errorSegments.length > 0) {
+    resultJSON.error = 'segments contains one or more invalid entries';
   }
   return errorSegments;
 }
