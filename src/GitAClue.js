@@ -5,7 +5,7 @@ import User from './User.js';
 // Define the valid combinations of contexts and their subordinate segments.
 // It is valid for a context to also be a segment within another context.
 const contextSegments = [
-  {context: 'repo', segments: ['contributor']},
+  {context: 'repo', segments: ['contributors']},
   {context: 'user', segments: []}
 ];
 
@@ -24,9 +24,11 @@ const contextSegments = [
  */
 function get(options) {
   if (!validateOptions(options)) {
-    return null
+    return null;
   }
 
+  // TODO: For testing only. Replace with real code later.
+  return '';
 }
 
 /**
@@ -36,15 +38,16 @@ function get(options) {
  */
 function validateOptions(options) {
   if (options === null || options === undefined || typeof options != 'object') {
-    throw new Error(`Invalid parameter. options: ${options}`);
+    return false;
   }
 
   for (const prop in options) {
     const contextType = options[prop].context;
-    const matchingContextEntry = validateContext(contextType);
+    const matchingContextEntry = isContextValid(contextType);
     const segments = options[prop].segments;
-    if (matchingContextEntry !== null ||
-        !validateSegments(matchingContextEntry, segments)) {
+    const errorSegments = !isSegmentsValid(matchingContextEntry, segments)
+    if (matchingContextEntry === null || errorSegments.length > 0) {
+      console.log('Invalid segments: ', errorSegments);
       return false;
     }
   }
@@ -57,9 +60,9 @@ function validateOptions(options) {
  * @returns {boolean} The matching contextSegments entry if found, otherwise
  * null.
  */
-function validateContext(contextType) {
+function isContextValid(contextType) {
   for (let i = 0; i < contextSegments.length; i++) {
-    if (contextSegments[i].contextType === contextType) {
+    if (contextSegments[i].context === contextType) {
       return contextSegments[i];
     }
   }
@@ -72,19 +75,25 @@ function validateContext(contextType) {
  * @param {[String]} segments The segment names to validate.
  * @returns {boolean} true if the contextType is valid, otherwise false.
  */
-function validateSegments(matchingContextEntry, segments) {
-  console.log('segments: ', segments);
-  if (segments === null || segments === '') {
-    return true;
+function isSegmentsValid(matchingContextEntry, optSegments) {
+  const errorSegments = [];
+  if (optSegments === undefined || optSegments === null || optSegments === '') {
+    return errorSegments;
+  }
+  if (typeof optSegments !== 'object') {
+    return errorSegments.push('Not an object');
   }
 
-  matchingContextSegments = matchingContextEntry.segments;
-  for (let i = 0; i < segments.length; i++) {
-    if (matchingContextSegments.indexOf(segments[i]) === -1) {
-      return false;
+  const matchingContextSegments = matchingContextEntry.segments;
+  for (let i = 0; i < optSegments.length; i++) {
+    if (optSegments[i] === '' || optSegments[i] === null ) {
+      continue;
+    }
+    if (matchingContextSegments.indexOf(optSegments[i]) === -1) {
+      errorSegments.push(optSegments[i]);
     }
   }
-  return true;
+  return errorSegments;
 }
 
 export default { get, validateOptions }
