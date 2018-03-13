@@ -41,10 +41,10 @@ let logCount = 0;
  * information in the same order they were specified in in the 'options'
  * parameter.
  */
-function get(options) {
+async function get(options) {
   operationOrder = [];
   if (validateOptions(options)) {
-    extractInfo(options);
+    await extractInfo(options);
   }
   const finalResult = JSON.stringify(resultJSON, null, 2);
   console.log(TS, logCount++, 'resultJSON: ', resultJSON);
@@ -166,13 +166,13 @@ function isSegmentsValid(matchingContextEntry, optSegments) {
  * @description Extract information from GitHub and build the response JSON
  * @param {any} options User options object
  */
-function extractInfo(options) {
+async function extractInfo(options) {
   for (let i = 0; i < operationOrder.length; i +=1) {
     const operation = operationOrder[i];
     for (let j = 0; j < operationFunctions.length; j +=1) {
       const extractFunction = operationFunctions[j];
       if (extractFunction.object === operation.name) {
-        extractFunction.funcName(operation);
+        await extractFunction.funcName(operation);
       }
     }
   }

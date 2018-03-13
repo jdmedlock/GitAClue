@@ -5,7 +5,7 @@ import gitAClue from '../src/gitAClue';
 
 describe('Test gitAClue.js functions', () => {
   describe('Test options parameter with valid parameters', () => {
-    it('should return true for valid options - context and segments',  () => {
+    it('should return true for valid options - context and segments', async () => {
       const option = [
         {
           context: 'repo',
@@ -14,7 +14,7 @@ describe('Test gitAClue.js functions', () => {
           segments: ['contributors'],
         },
       ];
-      const result = gitAClue.get(option)
+      const result = await gitAClue.get(option)
       console.log('result: ', result);
       assert.equal(result.name, 'GitAClue');
     });

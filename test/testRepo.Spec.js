@@ -8,11 +8,11 @@ describe('Test Repo.js functions', function () {
     it('should return a Repo object instance with instance variables populated from GitHub', async () => {
       const repoObject = new Repo('chingu-voyage4', 'Bears-Team-1');
       await repoObject.fetchRepoInfo();
+      assert.equal(repoObject.id, 121866033);
       console.log('\nRepo Info:');
       console.log('------------');
       console.log(repoObject);
       console.log('\n');
-      assert.equal(repoObject.id, 121866033);
     });
   });
 
