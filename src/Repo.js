@@ -29,24 +29,21 @@ export default class Repo {
    * @memberof Repo
    */
   async fetchRepoInfo() {
-    await GitHubInterface.fetchFromApi(this.apiUrl).then((response) => {
-      this.id = response.data.id;
-      this.description = response.data.description;
-      this.html_url = response.data.html_url;
-      this.private = response.data.private;
-      this.forked = response.data.fork;
-      this.cloned = !response.data.fork;
-      this.created_at = response.data.created_at;
-      this.updated_at = response.data.updated_at;
-      this.pushed_at = response.data.pushed_at;
-      this.noStars = response.data.stargazers_count;
-      this.noWatchers = response.data.watchers_count;
-      this.language = response.data.language;
-      this.license = response.data.license;
-      this.noForks = response.data.forks_count;
-      return true;
-    }).catch((reason) => {
-      throw new Error(`fetchRepoInfo promise rejection. Reason: ${reason}`);
-    });
+    const response = await GitHubInterface.fetchFromApi(this.apiUrl);
+    this.id = response.data.id;
+    this.description = response.data.description;
+    this.html_url = response.data.html_url;
+    this.private = response.data.private;
+    this.forked = response.data.fork;
+    this.cloned = !response.data.fork;
+    this.created_at = response.data.created_at;
+    this.updated_at = response.data.updated_at;
+    this.pushed_at = response.data.pushed_at;
+    this.noStars = response.data.stargazers_count;
+    this.noWatchers = response.data.watchers_count;
+    this.language = response.data.language;
+    this.license = response.data.license;
+    this.noForks = response.data.forks_count;
+    return response.data;
   }
 }

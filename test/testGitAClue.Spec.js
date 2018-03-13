@@ -8,10 +8,11 @@ describe('Test gitAClue.js functions', () => {
     it('should return true for valid options - context and segments', () => {
       const option = [
         {
-          context: 'repo', contextOwner: 'jdmedlock', contextName: 'jdmedlock', segments: ['contributors'],
+          context: 'repo', contextOwner: 'jdmedlock', contextName: 'GitAClue', segments: ['contributors'],
         },
       ];
-      assert.equal(gitAClue.get(option).error, null);
+      const result = JSON.parse(gitAClue.get(option));
+      assert.equal(result.error, null);
     });
 
     it('should return true for valid options - multiple contexts and segments', () => {
@@ -19,7 +20,7 @@ describe('Test gitAClue.js functions', () => {
         {
           context: 'repo',
           contextOwner: 'jdmedlock',
-          contextName: 'jdmedlock',
+          contextName: 'GitAClue',
           segments: ['contributors'],
         },
         {
@@ -29,76 +30,76 @@ describe('Test gitAClue.js functions', () => {
           segments: [''],
         },
       ];
-      assert.equal(gitAClue.get(option).error, null);
+      assert.equal(JSON.parse(gitAClue.get(option)).error, null);
     });
 
     it('should return true for a valid context - no segments', () => {
       const option = [
-        { context: 'user', contextOwner: 'jdmedlock', contextName: 'jdmedlock' },
+        { context: 'user', contextOwner: '', contextName: 'jdmedlock' },
       ];
-      assert.equal(gitAClue.get(option).error, null);
+      assert.equal(JSON.parse(gitAClue.get(option)).error, null);
     });
 
     it('should return true for a valid context - null segments', () => {
       const option = [
         {
           context: 'user',
-          contextOwner: 'jdmedlock',
+          contextOwner: '',
           contextName: 'jdmedlock',
           segments: null,
         },
       ];
-      assert.equal(gitAClue.get(option).error, null);
+      assert.equal(JSON.parse(gitAClue.get(option)).error, null);
     });
 
     it('should return true for a valid context - null string segments', () => {
       const option = [
         {
           context: 'user',
-          contextOwner: 'jdmedlock',
+          contextOwner: '',
           contextName: 'jdmedlock',
           segments: '',
         },
       ];
-      assert.equal(gitAClue.get(option).error, null);
+      assert.equal(JSON.parse(gitAClue.get(option)).error, null);
     });
 
     it('should return true for a valid context - null string array segments', () => {
       const option = [
         {
           context: 'user',
-          contextOwner: 'jdmedlock',
+          contextOwner: '',
           contextName: 'jdmedlock',
           segments: [''],
         },
       ];
-      assert.equal(gitAClue.get(option).error, null);
+      assert.equal(JSON.parse(gitAClue.get(option)).error, null);
     });
 
     it('should return true for a valid context - null array segments', () => {
       const option = [
         {
           context: 'user',
-          contextOwner: 'jdmedlock',
+          contextOwner: '',
           contextName: 'jdmedlock',
           segments: [null],
         },
       ];
-      assert.equal(gitAClue.get(option).error, null);
+      assert.equal(JSON.parse(gitAClue.get(option)).error, null);
     });
   });
 
   describe('Test options parameter with invalid parameters', () => {
     it('should return false for invalid options - null option', () => {
       const option = null;
-      assert.equal(gitAClue.get(option).error, 'option parameter is null, undefined, or not an object');
+      assert.equal(JSON.parse(gitAClue.get(option)).error, 'option parameter is null, undefined, or not an object');
     });
 
     it('should return false for invalid options - missing context keyword', () => {
       const option = [
-        { contextName: 'jdmedlock', contextOwner: 'jdmedlock', segments: ['contributors'] },
+        { contextName: 'GitAClue', contextOwner: 'jdmedlock', segments: ['contributors'] },
       ];
-      assert.equal(gitAClue.get(option).error, 'context is null, undefined, or not a string');
+      assert.equal(JSON.parse(gitAClue.get(option)).error, 'context is null, undefined, or not a string');
     });
 
     it('should return false for invalid options - unknown context keyword', () => {
@@ -106,25 +107,25 @@ describe('Test gitAClue.js functions', () => {
         {
           context: 'fred',
           contextOwner: 'jdmedlock',
-          contextName: 'jdmedlock',
+          contextName: 'GitAClue',
           segments: ['contributors'],
         },
       ];
-      assert.equal(gitAClue.get(option).error, 'unknown context specified');
+      assert.equal(JSON.parse(gitAClue.get(option)).error, 'unknown context specified');
     });
 
     it('should return false for invalid options - missing contextOwner keyword', () => {
       const option = [
-        { context: 'repo', contextName: 'jdmedlock', segments: ['contributors'] },
+        { context: 'repo', contextName: 'GitAClue', segments: ['contributors'] },
       ];
-      assert.equal(gitAClue.get(option).error, 'contextOwner is null, undefined, or not a string');
+      assert.equal(JSON.parse(gitAClue.get(option)).error, 'contextOwner is null, undefined, or not a string');
     });
 
     it('should return false for invalid options - missing contextName keyword', () => {
       const option = [
         { context: 'repo', contextOwner: 'jdmedlock', segments: ['contributors'] },
       ];
-      assert.equal(gitAClue.get(option).error, 'contextName is null, undefined, or not a string');
+      assert.equal(JSON.parse(gitAClue.get(option)).error, 'contextName is null, undefined, or not a string');
     });
 
     it('should return false for invalid options - invalid segment name', () => {
@@ -132,11 +133,11 @@ describe('Test gitAClue.js functions', () => {
         {
           context: 'repo',
           contextOwner: 'jdmedlock',
-          contextName: 'jdmedlock',
+          contextName: 'GitAClue',
           segments: ['gandalf'],
         },
       ];
-      assert.equal(gitAClue.get(option).error, 'segments contains one or more invalid entries');
+      assert.equal(JSON.parse(gitAClue.get(option)).error, 'segments contains one or more invalid entries');
     });
   });
 });

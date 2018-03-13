@@ -1,4 +1,5 @@
 /* eslint-disable no-use-before-define */
+import Repo from './Repo';
 
 // Define the valid combinations of contexts and their subordinate segments.
 // It is valid for a context to also be a segment within another context.
@@ -21,7 +22,9 @@ const operationFunctions = [
   {object: 'user', funcName: getUserInfo},
 ];
 
-const resultJSON = {};
+let resultJSON = {};
+let TS = new Date().toISOString();
+let logCount = 0;
 
 /**
  * @description Retrieve a set of contexts and segments from the GitHub API
@@ -41,11 +44,12 @@ const resultJSON = {};
 function get(options) {
   operationOrder = [];
   if (validateOptions(options)) {
-    console.log('\operationOrder: ', operationOrder);  
     extractInfo(options);
   }
-
-  return resultJSON;
+  const finalResult = JSON.stringify(resultJSON, null, 2);
+  console.log(TS, logCount++, 'resultJSON: ', resultJSON);
+  console.log(TS, logCount++, 'finalResult: ', finalResult);
+  return finalResult;
 }
 
 /**
@@ -161,42 +165,34 @@ function isSegmentsValid(matchingContextEntry, optSegments) {
 /**
  * @description Extract information from GitHub and build the response JSON
  * @param {any} options User options object
- * @returns {Object} JSON response object containing the extracted information
  */
 function extractInfo(options) {
-  operationOrder.forEach((operation) => {
-    operationFunctions.forEach((extractFunction) => {
-      console.log(`Compare object: ${extractFunction.object} name: ${operation.name}`);
+  for (let i = 0; i < operationOrder.length; i +=1) {
+    const operation = operationOrder[i];
+    for (let j = 0; j < operationFunctions.length; j +=1) {
+      const extractFunction = operationFunctions[j];
       if (extractFunction.object === operation.name) {
-        switch (operation.type) {
-          case 'context':
-            console.log(`..Processing context: ${operation.name}`);
-            extractFunction.funcName();
-            break;
-          case 'segment':
-            console.log(`..Processing segment: ${operation.name}`);
-            extractFunction.funcName();
-          break;
-          default:
-            throw new Error(`Invalid operation.type: ${operation.type}`);
-        }
+        extractFunction.funcName(operation);
       }
-    });
-  });
+    }
+  }
 
   return true;
 }
 
-function getContributorsInfo() {
-  console.log('Entered getContributorsInfo');
+function getContributorsInfo(operation) {
+  console.log(TS, logCount++, 'Entered getContributorsInfo');
 }
 
-function getRepoInfo() {
-  console.log('Entered getRepoInfo');
+async function getRepoInfo(operation) {
+  console.log(TS, logCount++, `Entered getRepoInfo - owner:${operation.contextOwner} name:${operation.contextName}`);
+  const repoObject = new Repo(operation.contextOwner, operation.contextName);
+  await repoObject.fetchRepoInfo();
+  console.log(TS, logCount++, 'repoObject:', repoObject);
 }
 
-function getUserInfo() {
-  console.log('Entered getUserInfo');
+function getUserInfo(operation) {
+  console.log(TS, logCount++, 'Entered getUserInfo');
 }
 
 export default { get, validateOptions };
