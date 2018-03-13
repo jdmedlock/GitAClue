@@ -1,4 +1,5 @@
 /* eslint-disable no-use-before-define */
+
 // Define the valid combinations of contexts and their subordinate segments.
 // It is valid for a context to also be a segment within another context.
 const contextSegments = [
@@ -8,6 +9,16 @@ const contextSegments = [
   {
     context: 'user', segments: [],
   },
+];
+
+// The Operation Order array contains the contexts and segments to be
+// extracted from GitHub and specifies the order of these elements in the
+// JSON string returned to the caller.
+let operationOrder = [];
+const operationFunctions = [
+  {object: 'contributors', funcName: getContributorsInfo},
+  {object: 'repo', funcName: getRepoInfo},
+  {object: 'user', funcName: getUserInfo},
 ];
 
 const resultJSON = {};
@@ -28,7 +39,9 @@ const resultJSON = {};
  * parameter.
  */
 function get(options) {
+  operationOrder = [];
   if (validateOptions(options)) {
+    console.log('\operationOrder: ', operationOrder);  
     extractInfo(options);
   }
 
@@ -64,7 +77,8 @@ function validateOptions(options) {
       return false;
     }
 
-    const matchingContextEntry = isContextValid(contextType);
+    const matchingContextEntry = isContextValid(contextType, contextOwner,
+      contextName);
     if (matchingContextEntry === null) {
       return false;
     }
@@ -81,16 +95,24 @@ function validateOptions(options) {
 /**
  * @description Validate a context type
  * @param {String} contextType The context to validate.
+ * @param {String} contextOwner the owner of the context object
+ * @param {String} contextName the name of the context object
  * @returns {boolean} The matching contextSegments entry if found, otherwise
  * null.
  */
-function isContextValid(contextType) {
+function isContextValid(contextType, contextOwner, contextName) {
   if (contextType === null || contextType === undefined || typeof contextType !== 'string') {
     resultJSON.error = 'context is null, undefined, or not a string';
     return null;
   }
   for (let i = 0; i < contextSegments.length; i += 1) {
     if (contextSegments[i].context === contextType) {
+      operationOrder.push({
+        type: 'context',
+        name: `${contextType}`,
+        contextOwner: `${contextOwner}`,
+        contextName: `${contextName}`,
+      });
       return contextSegments[i];
     }
   }
@@ -121,7 +143,12 @@ function isSegmentsValid(matchingContextEntry, optSegments) {
       /* eslint-disable no-continue */
       continue;
     }
-    if (matchingContextSegments.indexOf(optSegments[i]) === -1) {
+    if (matchingContextSegments.indexOf(optSegments[i]) > -1) {
+      operationOrder.push({
+        type: 'segment',
+        name: `${optSegments[i]}`,
+      });
+    } else {
       errorSegments.push(optSegments[i]);
     }
   }
@@ -137,8 +164,39 @@ function isSegmentsValid(matchingContextEntry, optSegments) {
  * @returns {Object} JSON response object containing the extracted information
  */
 function extractInfo(options) {
-  // TODO: Actually write the code
+  operationOrder.forEach((operation) => {
+    operationFunctions.forEach((extractFunction) => {
+      console.log(`Compare object: ${extractFunction.object} name: ${operation.name}`);
+      if (extractFunction.object === operation.name) {
+        switch (operation.type) {
+          case 'context':
+            console.log(`..Processing context: ${operation.name}`);
+            extractFunction.funcName();
+            break;
+          case 'segment':
+            console.log(`..Processing segment: ${operation.name}`);
+            extractFunction.funcName();
+          break;
+          default:
+            throw new Error(`Invalid operation.type: ${operation.type}`);
+        }
+      }
+    });
+  });
+
   return true;
+}
+
+function getContributorsInfo() {
+  console.log('Entered getContributorsInfo');
+}
+
+function getRepoInfo() {
+  console.log('Entered getRepoInfo');
+}
+
+function getUserInfo() {
+  console.log('Entered getUserInfo');
 }
 
 export default { get, validateOptions };
