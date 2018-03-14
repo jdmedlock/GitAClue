@@ -1,6 +1,6 @@
 # GitAClue - GitHub Information Extraction Library
 
-[![Build Status](https://travis-ci.org/jdmedlock/GitAClue.svg?branch=development)](https://travis-ci.org/jdmedlock/GitAClue)
+[![Build Status](https://travis-ci.org/jdmedlock/GitAClue.svg?branch=development)](https://travis-ci.org/jdmedlock/GitAClue) [![GitHub last commit](https://img.shields.io/github/last-commit/google/skia.svg)](https://github.com/jdmedlock/GitAClue)
 <br/>
 [![Packagist](https://img.shields.io/packagist/l/doctrine/orm.svg)](https://github.com/jdmedlock/GitAClue/)
 
