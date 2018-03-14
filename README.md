@@ -29,17 +29,22 @@ which returns a JSON document containing the requested information.
 it will be returned in resulting JSON document.
 ```
 [
-  {context: 'context-id', contextName: 'context-name', segments: ['segment1', ...]},
-  {context: 'context-id', contextName: 'context-name', segments: ['segment1', ...]},
+  { context: 'context-id', contextOwner: 'context-owner', contextName: 'context-name', 
+    segments: ['segment1', ...] },
+  { context: 'context-id', contextOwner: 'context-owner', contextName: 'context-name', 
+    segments: ['segment1', ...] },
   ...
 ]
 ```
 
 The `context` parameter is a string that names the starting point for the
-requested GitHub information and `contextName` identifies the specific context to be
-retrieved. For example, a context of 'repo' and a contextName of 'GitAClue'
-establishes a the anchor to be the repo named 'GitAClue'. Only one context value
-and one context name may be specified in each entry.
+requested GitHub information while `contextOwner` and `contextName` identify the
+specific context to be
+retrieved. For example, a context of 'repo', a contextOwner of 'jdmedlock', and
+a contextName of 'GitAClue'
+establishes the starting point of the information to be retrieved as being to the
+repo named 'GitAClue'. Only one context value, context owner, and
+context name may be specified in each entry.
 
 `segments` is a list of zero or more sets of information associated with a context.
 Not all segments may be used with a given context. The same segment may be
@@ -79,8 +84,9 @@ In the event of an error a `null` string will be returned instead and an error w
 ### Example
 ```
 const ghInfo = citaclue.get([
-  {context: 'repo', contextName: 'GitAClue', segments: ['contributors']},
-  {context: 'user', contextName: 'jdmedlock', segments: []},
+  { context: 'repo', contextOwner: 'jdmedlock', contextName: 'GitAClue', 
+    segments: ['contributors'] },
+  { context: 'user', contextName: 'jdmedlock', segments: [] },
 ]);
 ```
 ## Release Notes
