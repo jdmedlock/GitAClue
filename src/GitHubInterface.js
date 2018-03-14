@@ -16,7 +16,6 @@ export default class GitHubInterface {
     }
     try {
       const response = await axios.get(apiUrl)
-      console.log('axios result: ', response);
       return response;
     }
     catch (error) {
