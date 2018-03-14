@@ -1,62 +1,96 @@
-import contributors from './Contributors.js';
-import repo from './Repo.js';
-import User from './User.js';
+/* eslint-disable no-use-before-define */
+import Contributors from './Contributors';
+import Repo from './Repo';
+import User from './User';
 
 // Define the valid combinations of contexts and their subordinate segments.
 // It is valid for a context to also be a segment within another context.
 const contextSegments = [
-  {context: 'repo', segments: ['contributors']},
-  {context: 'user', segments: []}
+  {
+    context: 'repo', contextOwner: '', contextName: '', segments: ['contributors'],
+  },
+  {
+    context: 'user', segments: [],
+  },
+];
+
+// The Operation Order array contains the contexts and segments to be
+// extracted from GitHub and specifies the order of these elements in the
+// JSON string returned to the caller.
+let operationOrder = [];
+const operationFunctions = [
+  {object: 'contributors', funcName: getContributorsInfo},
+  {object: 'repo', funcName: getRepoInfo},
+  {object: 'user', funcName: getUserInfo},
 ];
 
 let resultJSON = {};
+let TS = new Date().toISOString();
+let logCount = 0;
 
 /**
  * @description Retrieve a set of contexts and segments from the GitHub API
  * @param {Object} options an object containing context and segment names
  * in the format:
  * [
- *   {context: 'context-id', contextName: 'context-name', segments: ['segment1', ...]},
- *   {context: 'context-id', contextName: 'context-name', segments: ['segment1', ...]},
+ *   {context: 'context-id', contextOwner: 'context-owner', contextName: 'context-name',
+ *      segments: ['segment1', ...]},
+ *   {context: 'context-id', contextOwner: 'context-owner', contextName: 'context-name',
+ *      segments: ['segment1', ...]},
  *   ...
  * ]
- * @returns {String} A JSON string containing the context and segment 
+ * @returns {String} A JSON string containing the context and segment
  * information in the same order they were specified in in the 'options'
  * parameter.
  */
-function get(options) {
-  validateOptions(options);
-  return resultJSON;
+async function get(options) {
+  operationOrder = [];
+  if (validateOptions(options)) {
+    await extractInfo(options);
+  }
+  const finalResult = JSON.stringify(resultJSON, null, 2);
+  return finalResult;
 }
 
 /**
  * @description Validate the options object supplied by the caller
- * @param {Object} options 
+ * @param {Object} options
  * @returns {boolean} true if no errors are found, otherwise false.
  */
 function validateOptions(options) {
-  if (options === null || options === undefined || typeof options != 'object') {
+  if (options === null || options === undefined || typeof options !== 'object') {
     resultJSON.error = 'option parameter is null, undefined, or not an object';
     return false;
   }
 
+  /* eslint-disable guard-for-in, no-restricted-syntax */
   for (const prop in options) {
+    /* eslint-disable prefer-destructuring */
     const contextType = options[prop].context;
+    const contextOwner = options[prop].contextOwner;
     const contextName = options[prop].contextName;
+    const segments = options[prop].segments;
+
     if (contextName === null || contextName === undefined || typeof contextName !== 'string') {
       resultJSON.error = 'contextName is null, undefined, or not a string';
       return false;
     }
 
-    const matchingContextEntry = isContextValid(contextType);
+    if (contextOwner === null || contextOwner === undefined || typeof contextOwner !== 'string') {
+      resultJSON.error = 'contextOwner is null, undefined, or not a string';
+      return false;
+    }
+
+    const matchingContextEntry = isContextValid(contextType, contextOwner,
+      contextName);
     if (matchingContextEntry === null) {
       return false;
     }
 
-    const segments = options[prop].segments;
-    const errorSegments = !isSegmentsValid(matchingContextEntry, segments)
+    const errorSegments = !isSegmentsValid(matchingContextEntry, contextOwner,
+      contextName, segments);
     if (errorSegments.length > 0) {
-      resultJSON.error = 'Invalid segments: ' + errorSegments;
+      resultJSON.error = `Invalid segments: ${errorSegments}`;
       return false;
     }
   }
@@ -66,30 +100,40 @@ function validateOptions(options) {
 /**
  * @description Validate a context type
  * @param {String} contextType The context to validate.
+ * @param {String} contextOwner the owner of the context object
+ * @param {String} contextName the name of the context object
  * @returns {boolean} The matching contextSegments entry if found, otherwise
  * null.
  */
-function isContextValid(contextType) {
+function isContextValid(contextType, contextOwner, contextName) {
   if (contextType === null || contextType === undefined || typeof contextType !== 'string') {
     resultJSON.error = 'context is null, undefined, or not a string';
     return null;
   }
-  for (let i = 0; i < contextSegments.length; i++) {
+  for (let i = 0; i < contextSegments.length; i += 1) {
     if (contextSegments[i].context === contextType) {
+      operationOrder.push({
+        type: 'context',
+        name: `${contextType}`,
+        contextOwner: `${contextOwner}`,
+        contextName: `${contextName}`,
+      });
       return contextSegments[i];
     }
   }
   resultJSON.error = 'unknown context specified';
-return null;
+  return null;
 }
 
 /**
  * @description Validate an array of segment names
- * @param {String} contextType The context type that owns the segment
- * @param {[String]} segments The segment names to validate.
- * @returns {boolean} true if the contextType is valid, otherwise false.
+ * @param {String} matchingContextEntry The context type that owns the segment
+ * @param {[String]} optSegments The segment names to validate.
+ * @returns {Object} If no errors were found a null object or if errors were
+ * encountered one containing the offending segment names.
  */
-function isSegmentsValid(matchingContextEntry, optSegments) {
+function isSegmentsValid(matchingContextEntry, contextOwner, contextName,
+                         optSegments) {
   const errorSegments = [];
   if (optSegments === undefined || optSegments === null || optSegments === '') {
     return errorSegments;
@@ -100,11 +144,20 @@ function isSegmentsValid(matchingContextEntry, optSegments) {
   }
 
   const matchingContextSegments = matchingContextEntry.segments;
-  for (let i = 0; i < optSegments.length; i++) {
-    if (optSegments[i] === '' || optSegments[i] === null ) {
+  for (let i = 0; i < optSegments.length; i += 1) {
+    if (optSegments[i] === '' || optSegments[i] === null) {
+      /* eslint-disable no-continue */
       continue;
     }
-    if (matchingContextSegments.indexOf(optSegments[i]) === -1) {
+    if (matchingContextSegments.indexOf(optSegments[i]) > -1) {
+
+      operationOrder.push({
+        type: 'segment',
+        name: `${optSegments[i]}`,
+        contextOwner: `${contextOwner}`,
+        contextName: `${contextName}`,
+      });
+    } else {
       errorSegments.push(optSegments[i]);
     }
   }
@@ -114,4 +167,40 @@ function isSegmentsValid(matchingContextEntry, optSegments) {
   return errorSegments;
 }
 
-export default { get, validateOptions }
+/**
+ * @description Extract information from GitHub and build the response JSON
+ * @param {any} options User options object
+ */
+async function extractInfo(options) {
+  for (let i = 0; i < operationOrder.length; i +=1) {
+    const operation = operationOrder[i];
+    for (let j = 0; j < operationFunctions.length; j +=1) {
+      const extractFunction = operationFunctions[j];
+      if (extractFunction.object === operation.name) {
+        await extractFunction.funcName(operation);
+      }
+    }
+  }
+
+  return true;
+}
+
+async function getContributorsInfo(operation) {
+  const contributorsObject = new Contributors(operation.contextOwner, operation.contextName);
+  await contributorsObject.fetchAllInfo();
+  resultJSON = Object.assign(resultJSON, contributorsObject);
+}
+
+async function getRepoInfo(operation) {
+  const repoObject = new Repo(operation.contextOwner, operation.contextName);
+  await repoObject.fetchInfo();
+  resultJSON = Object.assign(resultJSON, repoObject);
+}
+
+async function getUserInfo(operation) {
+  const userObject = new User(operation.contextName);
+  await userObject.fetchInfo();
+  resultJSON = Object.assign(resultJSON, userObject);
+}
+
+export default { get, validateOptions };

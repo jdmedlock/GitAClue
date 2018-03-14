@@ -1,4 +1,12 @@
 require('babel-core/register')({
-  presets: ['es2015'],
+  "presets": [
+    [
+      "env", {
+        "targets": {
+          "node": "current"
+        }
+      }
+    ]
+  ],
   ignore: /node_modules\/(?!ProjectB)/,
 });

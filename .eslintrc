@@ -1,0 +1,24 @@
+{
+  "extends": "airbnb",
+  "env": {
+    "browser": true,
+    "es6": true,
+    "mocha": true
+  },
+  "rules": {
+    "valid-jsdoc": ["error", {
+      "requireReturn": false,
+      "requireReturnType": false,
+      "requireParamDescription": false,
+      "requireReturnDescription": false
+    }],
+    "require-jsdoc": ["error", {
+        "require": {
+            "FunctionDeclaration": true,
+            "MethodDefinition": false,
+            "ClassDeclaration": true
+        }
+    }],
+    "import/no-extraneous-dependencies": [2, {  }]
+  }
+}

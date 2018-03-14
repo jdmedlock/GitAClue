@@ -1,16 +1,14 @@
-import GitHubInterface from './GitHubInterface.js';
+import GitHubInterface from './GitHubInterface';
 
 export default class User {
-
   /**
    * @description Creates an instance of the User class.
-   * @param {String} ownerName Name of the repository owner
-   * @param {String} repoName Name of the repo
+   * @param {String} loginName Name of the repository owner
    * @memberof User
    */
   constructor(loginName) {
-    if (loginName === null || loginName === undefined || typeof loginName != 'string' ) {
-      throw new Error(`Expected string value for ownerName parameter. Received: ${ownerName}`);
+    if (loginName === null || loginName === undefined || typeof loginName !== 'string') {
+      throw new Error(`Expected string value for ownerName parameter. Received: ${loginName}`);
     }
     this.name = loginName;
     this.apiUrl = `https://api.github.com/users/${loginName}`;
@@ -18,10 +16,10 @@ export default class User {
 
   /**
    * @description Retrieve information about a user from GitHub
-   * @returns {Promise} A promise that will be fulfilled with the operation is complete.
+   * @returns {Boolean} True if the information was successfully retrieved.
    * @memberof User
    */
-  async fetchUserInfo() {
+  async fetchInfo() {
     const response = await GitHubInterface.fetchFromApi(this.apiUrl);
     this.id = response.data.id;
     this.name = response.data.login;
@@ -38,6 +36,4 @@ export default class User {
     this.updated_at = response.data.updated_at;
     return true;
   }
-  
 }
-  
