@@ -4,7 +4,6 @@
 <br/>
 [![Packagist](https://img.shields.io/packagist/l/doctrine/orm.svg)](https://github.com/jdmedlock/GitAClue/)
 
-
 GitAClue provides the Javascript developer with access to various GitHub data
 and metrics. Despite the fact that GitHub's API makes it to access this
 information, GitAClue makes even simpler by insulating the caller from this
