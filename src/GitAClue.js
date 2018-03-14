@@ -183,7 +183,6 @@ async function extractInfo(options) {
       if (extractFunction.object === operation.name) {
         if (operation.type === 'context' && contextJSON !== null) {
           Object.assign(resultJSON, resultJSON, contextJSON);
-          console.log('Intermediate result: ', resultJSON);
           contextJSON = {};
         }
         await extractFunction.funcName(operation);
@@ -191,7 +190,6 @@ async function extractInfo(options) {
     }
     if (i === operationOrder.length-1) {
       Object.assign(resultJSON, resultJSON, contextJSON);
-      console.log('Ending result: ', resultJSON);
     }
   }
   return true;

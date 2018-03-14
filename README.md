@@ -106,71 +106,126 @@ related to one another) in a single get request,
 const gitaclue = require('../src/GitAClue');
 
 gitaclue.get([
-  { context: 'repo', contextOwner: 'jdmedlock', contextName: 'GitAClue', 
+  { context: 'repo', contextOwner: 'ShowMeCoders', contextName: 'showmecoders', 
     segments: ['contributors'] },
-  { context: 'user', contextOwner: ' ', contextName: 'jdmedlock', segments: [] },
+  { context: 'user', contextOwner: '', contextName: 'jdmedlock' },
 ])
 .then((response) => {
   console.log(`\nResponse from GitAClue.get(): ${response}`);
   const ghInfoObject = JSON.parse(response);
-  console.log(`\nRepo name:${ghInfoObject.name}`);
+  console.log(`\nRepo name:${ghInfoObject.repo.name}`);
 })
 .catch((error) => {
-  console.log('An error occurred. error=', error);
+  console.log(error);
 });
 ```
 which generates the output:
 ```
 Response from GitAClue.get(): {
-  "name": "jdmedlock",
-  "owner": "jdmedlock",
-  "apiUrl": "https://api.github.com/users/jdmedlock",
-  "id": 1287072,
-  "description": "GitHub Information Extraction Library",
-  "html_url": "https://github.com/jdmedlock",
-  "private": false,
-  "forked": false,
-  "cloned": true,
-  "created_at": "2011-12-27T00:14:59Z",
-  "updated_at": "2018-03-13T13:19:53Z",
-  "pushed_at": "2018-03-14T14:56:47Z",
-  "noStars": 0,
-  "noWatchers": 0,
-  "language": "JavaScript",
-  "license": {
-    "key": "mit",
-    "name": "MIT License",
-    "spdx_id": "MIT",
-    "url": "https://api.github.com/licenses/mit"
+  "repo": {
+    "name": "showmecoders",
+    "owner": "ShowMeCoders",
+    "apiUrl": "https://api.github.com/repos/ShowMeCoders/showmecoders",
+    "id": 123702029,
+    "description": "A portfolio of Missouri participants in the Grow With Google Challenge Scholarship program at Udacity",
+    "html_url": "https://github.com/ShowMeCoders/showmecoders",
+    "private": false,
+    "forked": false,
+    "cloned": true,
+    "created_at": "2018-03-03T15:01:18Z",
+    "updated_at": "2018-03-13T21:26:25Z",
+    "pushed_at": "2018-03-13T21:26:24Z",
+    "noStars": 5,
+    "noWatchers": 5,
+    "language": "HTML",
+    "license": {
+      "key": "mit",
+      "name": "MIT License",
+      "spdx_id": "MIT",
+      "url": "https://api.github.com/licenses/mit"
+    },
+    "noForks": 0,
+    "contributors": [
+      {
+        "name": "nickhaynes",
+        "apiUrl": "https://api.github.com/users/nickhaynes",
+        "id": 36779922,
+        "avatar_url": "https://avatars0.githubusercontent.com/u/36779922?v=4",
+        "html_url": "https://github.com/nickhaynes",
+        "type": "User",
+        "location": null,
+        "email": null,
+        "bio": "Former politico and aspiring developer.",
+        "followers": 3,
+        "following": 3,
+        "created_at": "2018-02-24T01:13:02Z",
+        "updated_at": "2018-03-07T01:27:01Z"
+      },
+      {
+        "name": "ZumDeWald",
+        "apiUrl": "https://api.github.com/users/ZumDeWald",
+        "id": 35619162,
+        "avatar_url": "https://avatars0.githubusercontent.com/u/35619162?v=4",
+        "html_url": "https://github.com/ZumDeWald",
+        "type": "User",
+        "location": "St. Louis, MO",
+        "email": null,
+        "bio": "I'm NEW, but working on it...",
+        "followers": 5,
+        "following": 8,
+        "created_at": "2018-01-20T03:52:14Z",
+        "updated_at": "2018-01-20T03:59:04Z"
+      },
+      {
+        "name": "jdmedlock",
+        "apiUrl": "https://api.github.com/users/jdmedlock",
+        "id": 1287072,
+        "avatar_url": "https://avatars3.githubusercontent.com/u/1287072?v=4",
+        "html_url": "https://github.com/jdmedlock",
+        "type": "User",
+        "location": "St. Louis, MO",
+        "email": null,
+        "bio": "Experienced IT professional with a background in both software development and infrastructure. Main areas of focus are Scrum and Javascript/NodeJS development.",
+        "followers": 44,
+        "following": 6,
+        "created_at": "2011-12-27T00:14:59Z",
+        "updated_at": "2018-03-13T13:19:53Z"
+      },
+      {
+        "name": "kylegeary",
+        "apiUrl": "https://api.github.com/users/kylegeary",
+        "id": 19237299,
+        "avatar_url": "https://avatars3.githubusercontent.com/u/19237299?v=4",
+        "html_url": "https://github.com/kylegeary",
+        "type": "User",
+        "location": "USA",
+        "email": null,
+        "bio": "Web application manager and front-end developer",
+        "followers": 1,
+        "following": 0,
+        "created_at": "2016-05-07T10:05:49Z",
+        "updated_at": "2018-03-10T22:38:48Z"
+      }
+    ]
   },
-  "noForks": 0,
-  "contributors": [
-    {
-      "name": "jdmedlock",
-      "apiUrl": "https://api.github.com/users/jdmedlock",
-      "id": 1287072,
-      "avatar_url": "https://avatars3.githubusercontent.com/u/1287072?v=4",
-      "html_url": "https://github.com/jdmedlock",
-      "type": "User",
-      "location": "St. Louis, MO",
-      "email": null,
-      "bio": "Experienced IT professional with a background in both software development and infrastructure. Main areas of focus are Scrum and Javascript/NodeJS development.",
-      "followers": 44,
-      "following": 6,
-      "created_at": "2011-12-27T00:14:59Z",
-      "updated_at": "2018-03-13T13:19:53Z"
-    }
-  ],
-  "avatar_url": "https://avatars3.githubusercontent.com/u/1287072?v=4",
-  "type": "User",
-  "location": "St. Louis, MO",
-  "email": null,
-  "bio": "Experienced IT professional with a background in both software development and infrastructure. Main areas of focus are Scrum and Javascript/NodeJS development.",
-  "followers": 44,
-  "following": 6
+  "user": {
+    "name": "jdmedlock",
+    "apiUrl": "https://api.github.com/users/jdmedlock",
+    "id": 1287072,
+    "avatar_url": "https://avatars3.githubusercontent.com/u/1287072?v=4",
+    "html_url": "https://github.com/jdmedlock",
+    "type": "User",
+    "location": "St. Louis, MO",
+    "email": null,
+    "bio": "Experienced IT professional with a background in both software development and infrastructure. Main areas of focus are Scrum and Javascript/NodeJS development.",
+    "followers": 44,
+    "following": 6,
+    "created_at": "2011-12-27T00:14:59Z",
+    "updated_at": "2018-03-13T13:19:53Z"
+  }
 }
 
-Repo name:jdmedlock
+Repo name:showmecoders
 ```
 ## Change Log
 

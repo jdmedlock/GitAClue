@@ -22,9 +22,10 @@ module.exports = class GitHubInterface {
       if (error.response === undefined) {
         throw new Error(`Axios error. ${error}`);
       } else {
-        throw new Error(`GitHub API rate limit exceeded. Status:${error.response.status} - ` +
+        throw new Error(`GitHub API rate limit exceeded - ` +
           `${error.response.headers['x-ratelimit-remaining']} of ` +
-          `${error.response.headers['x-ratelimit-limit']} remaining`);
+          `${error.response.headers['x-ratelimit-limit']} remaining. ` +
+          `Status:${error.response.status}`);
       }
     }
   }

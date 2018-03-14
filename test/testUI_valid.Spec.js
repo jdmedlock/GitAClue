@@ -15,7 +15,7 @@ describe('Test gitAClue.js functions', () => {
         },
       ];
       const result = await gitAClue.get(option);
-      assert.equal(JSON.parse(result).name, 'GitAClue');
+      assert.equal(JSON.parse(result).repo.name, 'GitAClue');
     });
 
     it('should return true for valid options - multiple contexts and segments', async () => {
@@ -34,7 +34,8 @@ describe('Test gitAClue.js functions', () => {
         },
       ];
       const result = await gitAClue.get(option);
-      assert.equal(JSON.parse(result).name, "jdmedlock");
+      assert.equal(JSON.parse(result).repo.name, 'GitAClue');
+      assert.equal(JSON.parse(result).user.name, 'jdmedlock');
     });
 
     it('should return true for a valid context - no segments', async () => {
@@ -42,7 +43,7 @@ describe('Test gitAClue.js functions', () => {
         { context: 'user', contextOwner: '', contextName: 'jdmedlock' },
       ];
       const result = await gitAClue.get(option);
-      assert.equal(JSON.parse(result).error, null);
+      assert.equal(JSON.parse(result).user.name, 'jdmedlock');
     });
 
     it('should return true for a valid context - null segments', async () => {
@@ -55,7 +56,7 @@ describe('Test gitAClue.js functions', () => {
         },
       ];
       const result = await gitAClue.get(option);
-      assert.equal(JSON.parse(result).name, 'jdmedlock');
+      assert.equal(JSON.parse(result).user.name, 'jdmedlock');
     });
 
     it('should return true for a valid context - null string segments', async () => {
@@ -68,7 +69,7 @@ describe('Test gitAClue.js functions', () => {
         },
       ];
       const result = await gitAClue.get(option);
-      assert.equal(JSON.parse(result).name, 'jdmedlock');
+      assert.equal(JSON.parse(result).user.name, 'jdmedlock');
     });
 
     it('should return true for a valid context - null string array segments', async () => {
@@ -81,7 +82,7 @@ describe('Test gitAClue.js functions', () => {
         },
       ];
       const result = await gitAClue.get(option);
-      assert.equal(JSON.parse(result).name, 'jdmedlock');
+      assert.equal(JSON.parse(result).user.name, 'jdmedlock');
     });
 
     it('should return true for a valid context - null array segments', async () => {
@@ -94,7 +95,7 @@ describe('Test gitAClue.js functions', () => {
         },
       ];
       const result = await gitAClue.get(option);
-      assert.equal(JSON.parse(result).name, 'jdmedlock');
+      assert.equal(JSON.parse(result).user.name, 'jdmedlock');
     });
   });
 });

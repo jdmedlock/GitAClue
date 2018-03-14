@@ -11,6 +11,6 @@ gitaclue.get([
   console.log(`\nRepo name:${ghInfoObject.repo.name}`);
 })
 .catch((error) => {
-  console.log('An error occurred. error=', error);
+  console.log(error);
 });
 
