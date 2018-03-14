@@ -1,5 +1,7 @@
 # GitAClue - GitHub Information Extraction Library
 
+[![Build Status](https://travis-ci.org/jdmedlock/GitAClue.svg?branch=development)](https://travis-ci.org/jdmedlock/GitAClue)
+
 GitAClue provides the Javascript developer with access to various GitHub data
 and metrics. Despite the fact that GitHub's API makes it to access this
 information, GitAClue makes even simpler by insulating the caller from this
