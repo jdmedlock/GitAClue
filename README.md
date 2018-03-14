@@ -20,7 +20,10 @@ data rather than all of the data available through the GitHub API.
 
 ## Installation
 
-_TBD_
+Using NPM:
+```
+$ npm install gitaclue
+```
 
 ## Usage
 
@@ -50,10 +53,15 @@ establishes the starting point of the information to be retrieved as being to th
 repo named 'GitAClue'. Only one context value, context owner, and
 context name may be specified in each entry.
 
-`segments` is a list of zero or more sets of information associated with a context.
-Not all segments may be used with a given context. The same segment may be
-repeated in more than one context. Consult the following table for
-the valid combinations of context and segment values.
+`segments` is a list of zero or more sets of information realated to a context.
+For example, producing a list of conributors is relevant only within the 
+context of a repo.
+
+It is valid to request a context with no segments. It is also valid to specify
+the same segment name in more than one context within a single request. The
+following table lists the combinations of context and segments that may be
+requested together. Over time GitAClue will be enhanced to provide access to
+additional contexts and segments.
 
 | Context Name | Valid Segment Names |
 |:-------------|:--------------------|
