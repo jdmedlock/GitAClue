@@ -100,16 +100,81 @@ the error message. For example,
 ```
 
 ### Example
+The following program requests information about a repo and a user (not necessarily
+related to one another) in a single get request,
 ```
-const ghInfo = citaclue.get([
+const gitaclue = require('../src/GitAClue');
+
+gitaclue.get([
   { context: 'repo', contextOwner: 'jdmedlock', contextName: 'GitAClue', 
     segments: ['contributors'] },
-  { context: 'user', contextName: 'jdmedlock', segments: [] },
-]);
+  { context: 'user', contextOwner: ' ', contextName: 'jdmedlock', segments: [] },
+])
+.then((response) => {
+  console.log(`\nResponse from GitAClue.get(): ${response}`);
+  const ghInfoObject = JSON.parse(response);
+  console.log(`\nRepo name:${ghInfoObject.name}`);
+})
+.catch((error) => {
+  console.log('An error occurred. error=', error);
+});
 ```
-## Release Notes
+which generates the output:
+```
+Response from GitAClue.get(): {
+  "name": "jdmedlock",
+  "owner": "jdmedlock",
+  "apiUrl": "https://api.github.com/users/jdmedlock",
+  "id": 1287072,
+  "description": "GitHub Information Extraction Library",
+  "html_url": "https://github.com/jdmedlock",
+  "private": false,
+  "forked": false,
+  "cloned": true,
+  "created_at": "2011-12-27T00:14:59Z",
+  "updated_at": "2018-03-13T13:19:53Z",
+  "pushed_at": "2018-03-14T14:56:47Z",
+  "noStars": 0,
+  "noWatchers": 0,
+  "language": "JavaScript",
+  "license": {
+    "key": "mit",
+    "name": "MIT License",
+    "spdx_id": "MIT",
+    "url": "https://api.github.com/licenses/mit"
+  },
+  "noForks": 0,
+  "contributors": [
+    {
+      "name": "jdmedlock",
+      "apiUrl": "https://api.github.com/users/jdmedlock",
+      "id": 1287072,
+      "avatar_url": "https://avatars3.githubusercontent.com/u/1287072?v=4",
+      "html_url": "https://github.com/jdmedlock",
+      "type": "User",
+      "location": "St. Louis, MO",
+      "email": null,
+      "bio": "Experienced IT professional with a background in both software development and infrastructure. Main areas of focus are Scrum and Javascript/NodeJS development.",
+      "followers": 44,
+      "following": 6,
+      "created_at": "2011-12-27T00:14:59Z",
+      "updated_at": "2018-03-13T13:19:53Z"
+    }
+  ],
+  "avatar_url": "https://avatars3.githubusercontent.com/u/1287072?v=4",
+  "type": "User",
+  "location": "St. Louis, MO",
+  "email": null,
+  "bio": "Experienced IT professional with a background in both software development and infrastructure. Main areas of focus are Scrum and Javascript/NodeJS development.",
+  "followers": 44,
+  "following": 6
+}
 
-For more information see [Release Notes](https://github.com/jdmedlock/GitAClue/blob/development/CHANGELOG.md)
+Repo name:jdmedlock
+```
+## Change Log
+
+For more information see [Change Log](https://github.com/jdmedlock/GitAClue/blob/development/CHANGELOG.md)
 
 ## Contributing
 

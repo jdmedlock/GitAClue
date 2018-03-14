@@ -15,7 +15,7 @@ describe('Test gitAClue.js functions', () => {
         },
       ];
       const result = await gitAClue.get(option);
-      assert.equal(JSON.parse(result).name, 'showmecoders');
+      assert.equal(JSON.parse(result).name, 'GitAClue');
     });
 
     it('should return true for valid options - multiple contexts and segments', async () => {
@@ -34,7 +34,7 @@ describe('Test gitAClue.js functions', () => {
         },
       ];
       const result = await gitAClue.get(option);
-      assert.equal(JSON.parse(result).name, "GitAClue");
+      assert.equal(JSON.parse(result).name, "jdmedlock");
     });
 
     it('should return true for a valid context - no segments', async () => {
@@ -55,7 +55,7 @@ describe('Test gitAClue.js functions', () => {
         },
       ];
       const result = await gitAClue.get(option);
-      assert.equal(JSON.parse(result).name, jdmedlock);
+      assert.equal(JSON.parse(result).name, 'jdmedlock');
     });
 
     it('should return true for a valid context - null string segments', async () => {

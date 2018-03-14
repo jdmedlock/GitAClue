@@ -1,7 +1,7 @@
 /* eslint-disable no-use-before-define */
-import Contributors from './Contributors';
-import Repo from './Repo';
-import User from './User';
+const Contributors = require('./Contributors');
+const Repo = require('./Repo');
+const User = require('./User');
 
 // Define the valid combinations of contexts and their subordinate segments.
 // It is valid for a context to also be a segment within another context.
@@ -24,7 +24,9 @@ const operationFunctions = [
   {object: 'user', funcName: getUserInfo},
 ];
 
+let contextJSON = {};
 let resultJSON = {};
+
 let TS = new Date().toISOString();
 let logCount = 0;
 
@@ -114,6 +116,7 @@ function isContextValid(contextType, contextOwner, contextName) {
     if (contextSegments[i].context === contextType) {
       operationOrder.push({
         type: 'context',
+        context: `${contextType}`,
         name: `${contextType}`,
         contextOwner: `${contextOwner}`,
         contextName: `${contextName}`,
@@ -153,6 +156,7 @@ function isSegmentsValid(matchingContextEntry, contextOwner, contextName,
 
       operationOrder.push({
         type: 'segment',
+        context: `${matchingContextEntry.context}`,
         name: `${optSegments[i]}`,
         contextOwner: `${contextOwner}`,
         contextName: `${contextName}`,
@@ -177,21 +181,32 @@ async function extractInfo(options) {
     for (let j = 0; j < operationFunctions.length; j +=1) {
       const extractFunction = operationFunctions[j];
       if (extractFunction.object === operation.name) {
+        if (operation.type === 'context' && contextJSON !== null) {
+          Object.assign(resultJSON, resultJSON, contextJSON);
+          console.log('Intermediate result: ', resultJSON);
+          contextJSON = {};
+        }
         await extractFunction.funcName(operation);
       }
     }
+    if (i === operationOrder.length-1) {
+      Object.assign(resultJSON, resultJSON, contextJSON);
+      console.log('Ending result: ', resultJSON);
+    }
   }
-
   return true;
 }
 /**
- * @description Retrieve the contributors information from GitHub
+ * @description Retrieve the contributors information from GitHub. When used as a context
+ * the it is added as a new property at the root of the target object.
+ * However, when used as a segment it is adding as a new property into its context in
+ * the target object.
  * @param {Object} operation The matching entry from the operationOrder array for this object
  */
 async function getContributorsInfo(operation) {
   const contributorsObject = new Contributors(operation.contextOwner, operation.contextName);
   await contributorsObject.fetchAllInfo();
-  resultJSON = Object.assign(resultJSON, contributorsObject);
+  contextJSON[operation.context].contributors = contributorsObject.contributors;
 }
 
 /**
@@ -201,7 +216,11 @@ async function getContributorsInfo(operation) {
 async function getRepoInfo(operation) {
   const repoObject = new Repo(operation.contextOwner, operation.contextName);
   await repoObject.fetchInfo();
-  resultJSON = Object.assign(resultJSON, repoObject);
+  if (operation.type === 'context') {
+    contextJSON.repo = repoObject;
+  } else {
+    contextJSON[operation.context].repo = repoObject;
+  }
 }
 
 /**
@@ -211,7 +230,14 @@ async function getRepoInfo(operation) {
 async function getUserInfo(operation) {
   const userObject = new User(operation.contextName);
   await userObject.fetchInfo();
-  resultJSON = Object.assign(resultJSON, userObject);
+  if (operation.type === 'context') {
+    contextJSON.user = userObject;
+  } else {
+    contextJSON[operation.context].user = userObject;
+  }
 }
 
-export default { get, validateOptions };
+module.exports = {
+  get: get,
+  validateOptions: validateOptions
+};

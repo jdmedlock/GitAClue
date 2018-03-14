@@ -1,7 +1,7 @@
-import axios from 'axios';
-import validator from 'validator';
+const axios = require('axios');
+const validator = require('validator');
 
-export default class GitHubInterface {
+module.exports = class GitHubInterface {
 
   /**
    * @description Pass the supplied URL to Axios and return the JSON containing the results
@@ -28,4 +28,4 @@ export default class GitHubInterface {
       }
     }
   }
-}
+};

@@ -1,11 +1,11 @@
-import GitHubInterface from './GitHubInterface';
+const GitHubInterface = require('./GitHubInterface');
 
 /**
  * @description Extract Repo information from GitHub
  * @export
  * @class Repo
  */
-export default class Repo {
+module.exports = class Repo {
   /**
    * @description Creates an instance of the Repo class.
    * @param {String} ownerName Name of the repository owner
@@ -46,4 +46,4 @@ export default class Repo {
     this.noForks = response.data.forks_count;
     return response.data;
   }
-}
+};
