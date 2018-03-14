@@ -1,6 +1,6 @@
-import GitHubInterface from './GitHubInterface';
+const GitHubInterface = require('./GitHubInterface');
 
-export default class User {
+module.exports = class User {
   /**
    * @description Creates an instance of the User class.
    * @param {String} loginName Name of the repository owner
@@ -36,4 +36,4 @@ export default class User {
     this.updated_at = response.data.updated_at;
     return true;
   }
-}
+};

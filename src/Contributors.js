@@ -1,11 +1,12 @@
-import GitHubInterface from './GitHubInterface.js';
-import User from './User.js';
+const GitHubInterface = require('./GitHubInterface.js');
+const User = require('./User.js');
+
 /**
  * @description Extract repo contributors from GitHub
  * @export
  * @class Contributors
  */
-export default class Contributors {
+module.exports = class Contributors {
 
   /**
    * @description Creates an instance of the Contributor class.
@@ -38,6 +39,4 @@ export default class Contributors {
       this.contributors.push(userObject);
       }
   }
-
-}
-  
+};
