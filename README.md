@@ -1,5 +1,9 @@
 # GitAClue - GitHub Information Extraction Library
 
+[![Build Status](https://travis-ci.org/jdmedlock/GitAClue.svg?branch=development)](https://travis-ci.org/jdmedlock/GitAClue) [![GitHub last commit](https://img.shields.io/github/last-commit/google/skia.svg)](https://github.com/jdmedlock/GitAClue)
+<br/>
+[![Packagist](https://img.shields.io/packagist/l/doctrine/orm.svg)](https://github.com/jdmedlock/GitAClue/)
+
 GitAClue provides the Javascript developer with access to various GitHub data
 and metrics. Despite the fact that GitHub's API makes it to access this
 information, GitAClue makes even simpler by insulating the caller from this
@@ -75,11 +79,17 @@ GitAClue returns a JSON string of the following format:
   ...
 }
 ```
-In the event of an error a `null` string will be returned instead and an error will be thrown.
 
 ### Errors
 
-*_TBD_*
+In the event that an error is encountered during processing the returned
+JSON string will include an 'error' property with a string value containing
+the error message. For example,
+```
+{
+  error: 'option parameter is null, undefined, or not an object'
+}
+```
 
 ### Example
 ```
