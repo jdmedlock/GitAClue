@@ -10,26 +10,23 @@ export default class GitHubInterface {
    * @returns {Object} A Promise which will be resolved with the response if successful
    * @memberof GitHubInterface
    */
-  static fetchFromApi(apiUrl) {
+  static async fetchFromApi(apiUrl) {
     if (!validator.isURL(apiUrl)) {
       throw new Error(`fetchFromAPI invalid apiUrl. apiUrl: ${apiUrl}`);
     }
-    let result = null;
-    return new Promise(function (resolve, reject) {
-      try {
-        result = axios.get(apiUrl);
-        resolve(result);
+    try {
+      const response = await axios.get(apiUrl)
+      console.log('axios result: ', response);
+      return response;
+    }
+    catch (error) {
+      if (error.response === undefined) {
+        throw new Error(`Axios error. ${error}`);
+      } else {
+        throw new Error(`GitHub API rate limit exceeded. Status:${error.response.status} - ` +
+          `${error.response.headers['x-ratelimit-remaining']} of ` +
+          `${error.response.headers['x-ratelimit-limit']} remaining`);
       }
-      catch (error) {
-        if (error.response === undefined) {
-          console.log('axios error: ', error);
-        } else {
-          console.log('Status: ', error.response.status);
-          console.log(error.response.data.message);
-          console.log(`GitHub API rate remaining/limit: ${error.response.headers['x-ratelimit-remaining']}/${error.response.headers['x-ratelimit-limit']}`);
-        }
-        reject(error);
-      };
-    });
+    }
   }
 }

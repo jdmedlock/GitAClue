@@ -184,19 +184,30 @@ async function extractInfo(options) {
 
   return true;
 }
-
+/**
+ * @description Retrieve the contributors information from GitHub
+ * @param {Object} operation The matching entry from the operationOrder array for this object
+ */
 async function getContributorsInfo(operation) {
   const contributorsObject = new Contributors(operation.contextOwner, operation.contextName);
   await contributorsObject.fetchAllInfo();
   resultJSON = Object.assign(resultJSON, contributorsObject);
 }
 
+/**
+ * @description Retrieve the repo information from GitHub
+ * @param {Object} operation The matching entry from the operationOrder array for this object
+ */
 async function getRepoInfo(operation) {
   const repoObject = new Repo(operation.contextOwner, operation.contextName);
   await repoObject.fetchInfo();
   resultJSON = Object.assign(resultJSON, repoObject);
 }
 
+/**
+ * @description Retrieve the user information from GitHub
+ * @param {Object} operation The matching entry from the operationOrder array for this object
+ */
 async function getUserInfo(operation) {
   const userObject = new User(operation.contextName);
   await userObject.fetchInfo();

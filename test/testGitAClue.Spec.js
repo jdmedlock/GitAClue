@@ -5,14 +5,17 @@ import gitAClue from '../src/gitAClue';
 
 describe('Test gitAClue.js functions', () => {
   describe('Test options parameter with valid parameters', () => {
-    it('should return true for valid options - context and segments', () => {
+    it('should return true for valid options - context and segments', async () => {
       const option = [
         {
-          context: 'repo', contextOwner: 'jdmedlock', contextName: 'GitAClue', segments: ['contributors'],
+          context: 'repo', 
+          contextOwner: 'jdmedlock', 
+          contextName: 'GitAClue', 
+          segments: ['contributors'],
         },
       ];
-      const result = JSON.parse(gitAClue.get(option));
-      assert.equal(result.error, null);
+      const result = await gitAClue.get(option);
+      assert.equal(JSON.parse(result).error, null);
     });
 
     it('should return true for valid options - multiple contexts and segments', () => {
