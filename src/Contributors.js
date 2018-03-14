@@ -30,11 +30,11 @@ export default class Contributors {
    * @description Retrieve repo contributors information from GitHub
    * @memberof Contributors
    */
-  async fetchAllContributorsInfo() {
+  async fetchAllInfo() {
     const response = await GitHubInterface.fetchFromApi(this.apiUrl);
     for (let i = 0; i < response.data.length; i++) {
       const userObject = new User(response.data[i].login);
-      await userObject.fetchUserInfo();
+      await userObject.fetchInfo();
       this.contributors.push(userObject);
       }
   }

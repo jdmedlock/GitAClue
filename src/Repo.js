@@ -28,10 +28,8 @@ export default class Repo {
    * @description Retrieve repo information from GitHub
    * @memberof Repo
    */
-  async fetchRepoInfo() {
-    console.log('fetchRepoInfo - before fetchFromAPI');
+  async fetchInfo() {
     const response = await GitHubInterface.fetchFromApi(this.apiUrl);
-    console.log('fetchRepoInfo - after fetchFromAPI');
     this.id = response.data.id;
     this.description = response.data.description;
     this.html_url = response.data.html_url;

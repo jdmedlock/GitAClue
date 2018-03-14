@@ -1,5 +1,7 @@
 /* eslint-disable no-use-before-define */
+import Contributors from './Contributors';
 import Repo from './Repo';
+import User from './User';
 
 // Define the valid combinations of contexts and their subordinate segments.
 // It is valid for a context to also be a segment within another context.
@@ -47,8 +49,6 @@ async function get(options) {
     await extractInfo(options);
   }
   const finalResult = JSON.stringify(resultJSON, null, 2);
-  console.log(TS, logCount++, 'resultJSON: ', resultJSON);
-  console.log(TS, logCount++, 'finalResult: ', finalResult);
   return finalResult;
 }
 
@@ -87,7 +87,8 @@ function validateOptions(options) {
       return false;
     }
 
-    const errorSegments = !isSegmentsValid(matchingContextEntry, segments);
+    const errorSegments = !isSegmentsValid(matchingContextEntry, contextOwner,
+      contextName, segments);
     if (errorSegments.length > 0) {
       resultJSON.error = `Invalid segments: ${errorSegments}`;
       return false;
@@ -131,7 +132,8 @@ function isContextValid(contextType, contextOwner, contextName) {
  * @returns {Object} If no errors were found a null object or if errors were
  * encountered one containing the offending segment names.
  */
-function isSegmentsValid(matchingContextEntry, optSegments) {
+function isSegmentsValid(matchingContextEntry, contextOwner, contextName,
+                         optSegments) {
   const errorSegments = [];
   if (optSegments === undefined || optSegments === null || optSegments === '') {
     return errorSegments;
@@ -148,9 +150,12 @@ function isSegmentsValid(matchingContextEntry, optSegments) {
       continue;
     }
     if (matchingContextSegments.indexOf(optSegments[i]) > -1) {
+
       operationOrder.push({
         type: 'segment',
         name: `${optSegments[i]}`,
+        contextOwner: `${contextOwner}`,
+        contextName: `${contextName}`,
       });
     } else {
       errorSegments.push(optSegments[i]);
@@ -180,19 +185,22 @@ async function extractInfo(options) {
   return true;
 }
 
-function getContributorsInfo(operation) {
-  console.log(TS, logCount++, 'Entered getContributorsInfo');
+async function getContributorsInfo(operation) {
+  const contributorsObject = new Contributors(operation.contextOwner, operation.contextName);
+  await contributorsObject.fetchAllInfo();
+  resultJSON = Object.assign(resultJSON, contributorsObject);
 }
 
 async function getRepoInfo(operation) {
-  console.log(TS, logCount++, `Entered getRepoInfo - owner:${operation.contextOwner} name:${operation.contextName}`);
   const repoObject = new Repo(operation.contextOwner, operation.contextName);
-  await repoObject.fetchRepoInfo();
-  console.log(TS, logCount++, 'repoObject:', repoObject);
+  await repoObject.fetchInfo();
+  resultJSON = Object.assign(resultJSON, repoObject);
 }
 
-function getUserInfo(operation) {
-  console.log(TS, logCount++, 'Entered getUserInfo');
+async function getUserInfo(operation) {
+  const userObject = new User(operation.contextName);
+  await userObject.fetchInfo();
+  resultJSON = Object.assign(resultJSON, userObject);
 }
 
 export default { get, validateOptions };

@@ -8,7 +8,7 @@ describe('Test User.js functions', () => {
   describe('Test the instantiation of the user class via its constructor function', () => {    
     it('should return a User object instance with instance variables populated from GitHub', async () => {
       const userObject = new User('jordanleo7');
-      await userObject.fetchUserInfo();
+      await userObject.fetchInfo();
       console.log('\nUser Info:');
       console.log('------------');
       console.log(userObject);

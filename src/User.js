@@ -19,7 +19,7 @@ export default class User {
    * @returns {Boolean} True if the information was successfully retrieved.
    * @memberof User
    */
-  async fetchUserInfo() {
+  async fetchInfo() {
     const response = await GitHubInterface.fetchFromApi(this.apiUrl);
     this.id = response.data.id;
     this.name = response.data.login;

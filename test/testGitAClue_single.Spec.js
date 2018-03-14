@@ -9,14 +9,14 @@ describe('Test gitAClue.js functions', () => {
       const option = [
         {
           context: 'repo',
-          contextOwner: 'jdmedlock',
-          contextName: 'GitAClue',
+          contextOwner: 'ShowMeCoders',
+          contextName: 'showmecoders',
           segments: ['contributors'],
         },
       ];
       const result = await gitAClue.get(option)
       console.log('result: ', result);
-      assert.equal(result.name, 'GitAClue');
+      assert.equal(JSON.parse(result).name, 'showmecoders');
     });
   });
 });
