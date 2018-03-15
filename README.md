@@ -14,7 +14,7 @@ GitAClue is opinionated in that it provides access the most frequently required
 data rather than all of the data available through the GitHub API. 
 
 [Installation](#installation) | [Usage](#usage) |
-[Release Notes](#release-notes) | [Contributing](#contributing) | 
+[Change Log](#change-log) | [Contributing](#contributing) | 
 [Authors](#authors) |
 [License](#license)
 
@@ -103,7 +103,7 @@ the error message. For example,
 The following program requests information about a repo and a user (not necessarily
 related to one another) in a single get request,
 ```
-const gitaclue = require('../src/GitAClue');
+const gitaclue = require('gitaclue');
 
 gitaclue.get([
   { context: 'repo', contextOwner: 'ShowMeCoders', contextName: 'showmecoders', 
