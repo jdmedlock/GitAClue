@@ -1,7 +1,7 @@
 /* eslint-disable func-names */
 import assert from 'assert';
 import './registerBabel';
-import gitAClue from '../src/gitAClue';
+import gitAClue from '../gitaclue';
 
 describe('Test gitAClue.js functions', () => {
   describe('Test options parameter with valid parameters', () => {

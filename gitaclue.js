@@ -1,7 +1,7 @@
 /* eslint-disable no-use-before-define */
-const Contributors = require('./Contributors');
-const Repo = require('./Repo');
-const User = require('./User');
+const Contributors = require('./src/Contributors');
+const Repo = require('./src/Repo');
+const User = require('./src/User');
 
 // Define the valid combinations of contexts and their subordinate segments.
 // It is valid for a context to also be a segment within another context.

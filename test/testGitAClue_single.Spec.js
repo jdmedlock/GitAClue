@@ -1,7 +1,7 @@
 /* eslint-disable func-names */
 import assert from 'assert';
 import './registerBabel';
-import gitAClue from '../src/gitAClue';
+import gitAClue from '../gitaclue';
 
 describe('Test gitAClue.js functions', () => {
   describe('Test options parameter with valid parameters', () => {
@@ -16,7 +16,7 @@ describe('Test gitAClue.js functions', () => {
       ];
       const result = await gitAClue.get(option)
       console.log('result: ', result);
-      assert.equal(JSON.parse(result).name, 'showmecoders');
+      assert.equal(JSON.parse(result).repo.name, 'showmecoders');
     });
   });
 });
