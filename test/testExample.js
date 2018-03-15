@@ -1,4 +1,4 @@
-const gitaclue = require('../src/GitAClue');
+const gitaclue = require('../gitaclue');
 
 gitaclue.get([
   { context: 'repo', contextOwner: 'ShowMeCoders', contextName: 'showmecoders', 
@@ -13,4 +13,3 @@ gitaclue.get([
 .catch((error) => {
   console.log(error);
 });
-
