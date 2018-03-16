@@ -8,10 +8,8 @@ describe('Test gitAClue.js functions', () => {
     it('should return true for valid options - context and segments', async () => {
       const option = [
         {
-          context: 'repo',
-          contextOwner: 'ShowMeCoders',
-          contextName: 'showmecoders',
-          segments: ['contributors'],
+          context: 'user',
+          contextName: 'jdmedlock'
         },
       ];
       const result = await gitAClue.get(option)
