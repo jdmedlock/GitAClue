@@ -36,9 +36,6 @@ const operationFunctions = [
 let contextJSON = {};
 let resultJSON = {};
 
-let TS = new Date().toISOString();
-let logCount = 0;
-
 /**
  * @description Retrieve a set of contexts and segments from the GitHub API
  * @param {Object} options an object containing context and segment names
@@ -69,14 +66,133 @@ async function get(options) {
  * @returns {boolean} true if no errors are found, otherwise false.
  */
 function validateOptions(options) {
+
   if (options === null || options === undefined || typeof options !== 'object') {
     resultJSON.error = 'option parameter is null, undefined, or not an object';
     return false;
   }
 
-  /* eslint-disable guard-for-in, no-restricted-syntax */
+  // Validate each entry in the options object against the rules specified
+  // in the matching entry in the optionsSyntax array
+  const compareAgainsOptionsSyntax = (element, i) => {
+    return function(element) {
+      return element.context === options[i].context;
+    };
+  };
+
+  for (let i = 0; i < options.length; i +=1) {
+
+    if (options[i].context === null || options[i].context === undefined ||
+        typeof options[i].context !== 'string') {
+      resultJSON.error = 'context is null, undefined, or not a string';
+      return false;
+    }
+
+    // Locate the matching entry for the specified context in the
+    // optionsSyntax array
+    const syntaxIndex = optionsSyntax.findIndex(compareAgainsOptionsSyntax,i);
+
+    if (syntaxIndex === -1) {
+      resultJSON.error = 'unknown context specified';
+      return false;
+    }
+
+    // Validate the contextOwner specification. 
+    if (optionsSyntax[syntaxIndex].contextOwner !== undefined) {
+      if (options[i].contextName === null || options[i].contextName === undefined ||
+          typeof options[i].contextName !== 'string') {
+        resultJSON.error = 'contextName is null, undefined, or not a string';
+        return false;
+      }
+    }
+
+    // Validate the contextName specification
+    if (optionsSyntax[syntaxIndex].contextName !== undefined) {
+      if (options[i].contextName === null || options[i].contextName === undefined ||
+          typeof options[i].contextName !== 'string') {
+        resultJSON.error = 'contextName is null, undefined, or not a string';
+        return false;
+      }
+    }
+
+    operationOrder.push({
+      type: 'context',
+      context: `${options[i].context}`,
+      name: `${options[i].contextType}`,
+      contextOwner: `${options[i].contextOwner}`,
+      contextName: `${options[i].contextName}`,
+    });
+
+    const errorSegments = !isSegmentsValid(options[i], optionsSyntax[syntaxIndex]);
+    if (errorSegments.length > 0) {
+      resultJSON.error = `Invalid segments: ${errorSegments}`;
+      return false;
+    }
+  }
+
+}
+
+/**
+ * @description Validate an array of segment names
+ * @param {Object} optionEntry User-specified options for the current context
+ * @param {Object} syntaxEntry Entry from the optionsSyntax array for the
+ * current context
+ * @returns {Object} If no errors were found a null object or if errors were
+ * encountered one containing the offending segment names.
+ */
+function isSegmentsValid(optionEntry, syntaxEntry) {
+  const errorSegments = [];
+
+  // Validate the presence and data type of the user supplied segment property
+  if (optionEntry.segments === undefined || optionEntry.segments === null ||
+      optionEntry.segments === '') {
+    return errorSegments;
+  }
+  if (typeof optionEntry.segments !== 'object') {
+    resultJSON.error = 'segments is not an array';
+    return errorSegments.push('Not an object');
+  }
+  
+  // Validate the values in the user supplied segment property 
+  // against the optionsSyntax array
+  for (let i = 0; i < optionEntry.segments.length; i += 1) {
+    if (optionEntry.segments[i] === '' || optionEntry.segments[i] === null) {
+      continue; /* eslint-disable no-continue */
+    }
+    if (syntaxEntry.segments.indexOf(optionEntry.segments[i]) > -1) {
+      operationOrder.push({
+        type: 'segment',
+        context: `${syntaxEntry.context}`,
+        name: `${optionEntry.segments[i]}`,
+        contextOwner: `${syntaxEntry.contextOwner}`,
+        contextName: `${syntaxEntry.contextName}`,
+      });
+    } else {
+      errorSegments.push(optionEntry.segments[i]);
+    }
+  }
+  if (errorSegments.length > 0) {
+    resultJSON.error = 'segments contains one or more invalid entries';
+  }
+  return errorSegments;
+}
+
+/* Old options validation logic
+
+**
+ * @description Validate the options object supplied by the caller
+ * @param {Object} options
+ * @returns {boolean} true if no errors are found, otherwise false.
+ *
+function validateOptions(options) {
+  if (options === null || options === undefined || typeof options !== 'object') {
+    resultJSON.error = 'option parameter is null, undefined, or not an object';
+    return false;
+  }
+
+  * eslint-disable guard-for-in, no-restricted-syntax *
   for (const prop in options) {
-    /* eslint-disable prefer-destructuring */
+    * eslint-disable prefer-destructuring *
     const contextType = options[prop].context;
     const contextOwner = options[prop].contextOwner;
     const contextName = options[prop].contextName;
@@ -108,14 +224,14 @@ function validateOptions(options) {
   return true;
 }
 
-/**
+**
  * @description Validate a context type
  * @param {String} contextType The context to validate.
  * @param {String} contextOwner the owner of the context object
  * @param {String} contextName the name of the context object
  * @returns {boolean} The matching optionsSyntax entry if found, otherwise
  * null.
- */
+ *
 function isContextValid(contextType, contextOwner, contextName) {
   if (contextType === null || contextType === undefined || typeof contextType !== 'string') {
     resultJSON.error = 'context is null, undefined, or not a string';
@@ -137,13 +253,13 @@ function isContextValid(contextType, contextOwner, contextName) {
   return null;
 }
 
-/**
+**
  * @description Validate an array of segment names
  * @param {String} matchingContextEntry The context type that owns the segment
  * @param {[String]} optSegments The segment names to validate.
  * @returns {Object} If no errors were found a null object or if errors were
  * encountered one containing the offending segment names.
- */
+ *
 function isSegmentsValid(matchingContextEntry, contextOwner, contextName,
                          optSegments) {
   const errorSegments = [];
@@ -158,7 +274,7 @@ function isSegmentsValid(matchingContextEntry, contextOwner, contextName,
   const matchingoptionsSyntax = matchingContextEntry.segments;
   for (let i = 0; i < optSegments.length; i += 1) {
     if (optSegments[i] === '' || optSegments[i] === null) {
-      /* eslint-disable no-continue */
+      /* eslint-disable no-continue *
       continue;
     }
     if (matchingoptionsSyntax.indexOf(optSegments[i]) > -1) {
@@ -179,6 +295,8 @@ function isSegmentsValid(matchingContextEntry, contextOwner, contextName,
   }
   return errorSegments;
 }
+
+End of old options validation logic */
 
 /**
  * @description Extract information from GitHub and build the response JSON
@@ -203,6 +321,7 @@ async function extractInfo(options) {
   }
   return true;
 }
+
 /**
  * @description Retrieve the contributors information from GitHub. When used as a context
  * the it is added as a new property at the root of the target object.
