@@ -3,14 +3,23 @@ const Contributors = require('./src/Contributors');
 const Repo = require('./src/Repo');
 const User = require('./src/User');
 
-// Define the valid combinations of contexts and their subordinate segments.
-// It is valid for a context to also be a segment within another context.
-const contextSegments = [
+// Define the valid combinations of properties and values in the 'options'
+// passed to the get() function. Entries in this table are interpreted as
+// follows:
+// - Entries in the options parameter supplied by the user are matched to
+//   entries in this array based on the context value.
+// - Properties are required if they are present. Any properties specified
+//   in the options object specified by the user that aren't in the
+//   corresponding entry in this array will be ignored.
+// - Property values of '*' are interpreted as any value is allowed. Any
+//   other value must exactly match the value provided by the user
+// - It is valid for a context to also be a segment within another context.
+const optionsSyntax = [
   {
-    context: 'repo', contextOwner: '', contextName: '', segments: ['contributors'],
+    context: 'repo', contextOwner: '*', contextName: '*', segments: ['contributors'],
   },
   {
-    context: 'user', segments: [],
+    context: 'user', contextName: '*',
   },
 ];
 
@@ -104,7 +113,7 @@ function validateOptions(options) {
  * @param {String} contextType The context to validate.
  * @param {String} contextOwner the owner of the context object
  * @param {String} contextName the name of the context object
- * @returns {boolean} The matching contextSegments entry if found, otherwise
+ * @returns {boolean} The matching optionsSyntax entry if found, otherwise
  * null.
  */
 function isContextValid(contextType, contextOwner, contextName) {
@@ -112,8 +121,8 @@ function isContextValid(contextType, contextOwner, contextName) {
     resultJSON.error = 'context is null, undefined, or not a string';
     return null;
   }
-  for (let i = 0; i < contextSegments.length; i += 1) {
-    if (contextSegments[i].context === contextType) {
+  for (let i = 0; i < optionsSyntax.length; i += 1) {
+    if (optionsSyntax[i].context === contextType) {
       operationOrder.push({
         type: 'context',
         context: `${contextType}`,
@@ -121,7 +130,7 @@ function isContextValid(contextType, contextOwner, contextName) {
         contextOwner: `${contextOwner}`,
         contextName: `${contextName}`,
       });
-      return contextSegments[i];
+      return optionsSyntax[i];
     }
   }
   resultJSON.error = 'unknown context specified';
@@ -146,13 +155,13 @@ function isSegmentsValid(matchingContextEntry, contextOwner, contextName,
     return errorSegments.push('Not an object');
   }
 
-  const matchingContextSegments = matchingContextEntry.segments;
+  const matchingoptionsSyntax = matchingContextEntry.segments;
   for (let i = 0; i < optSegments.length; i += 1) {
     if (optSegments[i] === '' || optSegments[i] === null) {
       /* eslint-disable no-continue */
       continue;
     }
-    if (matchingContextSegments.indexOf(optSegments[i]) > -1) {
+    if (matchingoptionsSyntax.indexOf(optSegments[i]) > -1) {
 
       operationOrder.push({
         type: 'segment',
