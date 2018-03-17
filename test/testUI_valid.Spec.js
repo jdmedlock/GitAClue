@@ -28,7 +28,6 @@ describe('Test gitAClue.js functions', () => {
         },
         {
           context: 'user',
-          contextOwner: 'jdmedlock',
           contextName: 'jdmedlock',
           segments: [''],
         },
