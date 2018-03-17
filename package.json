@@ -2,7 +2,7 @@
   "name": "gitaclue",
   "version": "0.2.0",
   "description": "GitHub Information Extraction Library",
-  "main": "index.js",
+  "main": "gitaclue.js",
   "directories": {
     "test": "test"
   },
