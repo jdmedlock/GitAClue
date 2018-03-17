@@ -4,11 +4,12 @@
 <br/>
 [![Packagist](https://img.shields.io/packagist/l/doctrine/orm.svg)](https://github.com/jdmedlock/GitAClue/)
 
-GitAClue provides the Javascript developer with access to various GitHub data
-and metrics. Despite the fact that GitHub's API makes it to access this
-information, GitAClue makes even simpler by insulating the caller from this
-API and by organizing the resulting data in the form of objects familiar to
-Javascript developers.
+GitAClue provides Javascript developers with access to GitHub data
+and metrics for use in their applications. Despite the fact that GitHub's
+API makes it easy to access
+information, GitAClue makes it even simpler by insulating the caller from the
+GitHub API and by organizing the resulting data in the form of contextually related
+objects.
 
 GitAClue is opinionated in that it provides access the most frequently required
 data rather than all of the data available through the GitHub API. 
@@ -32,7 +33,7 @@ which returns a JSON document containing the requested information.
 
 ### Parameters
 
-'options' describe the both the information you require as well as the order
+'options' describes both the information you require, as well as the order
 it will be returned in resulting JSON document.
 ```
 [
@@ -45,28 +46,27 @@ it will be returned in resulting JSON document.
 ```
 
 The `context` parameter is a string that names the starting point for the
-requested GitHub information while `contextOwner` and `contextName` identify the
-specific context to be
-retrieved. For example, a context of 'repo', a contextOwner of 'jdmedlock', and
-a contextName of 'GitAClue'
+requested GitHub information, while `contextOwner` and `contextName` identify
+the specific context to be retrieved. For example, a context of 'repo', a 
+contextOwner of 'jdmedlock', and a contextName of 'GitAClue'
 establishes the starting point of the information to be retrieved as being to the
 repo named 'GitAClue'. Only one context value, context owner, and
 context name may be specified in each entry.
 
-`segments` is a list of zero or more sets of information realated to a context.
+`segments` is a list of zero or more sets of information related to a context.
 For example, producing a list of conributors is relevant only within the 
 context of a repo.
 
 It is valid to request a context with no segments. It is also valid to specify
 the same segment name in more than one context within a single request. The
 following table lists the combinations of context and segments that may be
-requested together. Over time GitAClue will be enhanced to provide access to
+requested together. Over time, GitAClue will be enhanced to provide access to
 additional contexts and segments.
 
-| Context Name | Valid Segment Names |
-|:-------------|:--------------------|
-| user         | N/a                 |
-| repo         | contributors        |
+| Context      | Context Owner | Context Name | Valid Segment Names |
+|:-------------|:--------------|:-------------|:--------------------|
+| user         | N/a           | Required     | N/a                 |
+| repo         | Required      | Required     | contributors        |
 
 ### Return Value
 GitAClue returns a JSON string of the following format:
@@ -90,13 +90,23 @@ GitAClue returns a JSON string of the following format:
 
 ### Errors
 
-In the event that an error is encountered during processing the returned
+In the event that an error is encountered the returned
 JSON string will include an 'error' property with a string value containing
 the error message. For example,
 ```
 {
   error: 'option parameter is null, undefined, or not an object'
 }
+```
+
+The GitHub API imposes [rate limits](https://developer.github.com/v3/#rate-limiting)
+defining the maximum number of API calls that can be made in an hour. 
+Since GitAClue uses unauthenticated access to retrieve public data through
+the API it is subject to a rate limit of 60 requests per hour.
+
+When the rate limit is exceeded the following error message will be issued:
+```
+GitHub API rate limit exceeded - 0 of 60 remaining. Status:403
 ```
 
 ### Example

@@ -34,7 +34,11 @@ describe('Test gitAClue.js functions', () => {
 
     it('should return false for invalid options - missing contextOwner keyword', async () => {
       const option = [
-        { context: 'repo', contextName: 'GitAClue', segments: ['contributors'] },
+        { 
+          context: 'repo',
+          contextName: 'GitAClue',
+          segments: ['contributors'],
+        },
       ];
       const result = await gitAClue.get(option);
       assert.equal(JSON.parse(result).error, 'contextOwner is null, undefined, or not a string');
