@@ -16,10 +16,17 @@ const User = require('./src/User');
 // - It is valid for a context to also be a segment within another context.
 const optionsSyntax = [
   {
-    context: 'repo', contextOwner: '*', contextName: '*', segments: ['contributors'],
+    context: 'repo',
+    contextOwner: '*',
+    contextName: '*',
+    segments: [
+      'contributors',
+      'events'
+    ],
   },
   {
-    context: 'user', contextName: '*',
+    context: 'user',
+    contextName: '*',
   },
 ];
 
@@ -29,6 +36,7 @@ const optionsSyntax = [
 let operationOrder = [];
 const operationFunctions = [
   {object: 'contributors', funcName: getContributorsInfo},
+  {object: 'events', funcName: getEventsInfo},
   {object: 'repo', funcName: getRepoInfo},
   {object: 'user', funcName: getUserInfo},
 ];
@@ -96,7 +104,7 @@ function validateOptions(options) {
       return false;
     }
 
-    // Validate the contextOwner specification. 
+    // Validate the contextOwner specification.
     if (optionsSyntax[syntaxIndex].contextOwner !== undefined) {
       if (options[i].contextOwner === null || options[i].contextOwner === undefined ||
           typeof options[i].contextOwner !== 'string') {
@@ -151,8 +159,8 @@ function isSegmentsValid(optionEntry, syntaxEntry) {
     resultJSON.error = 'segments is not an array';
     return errorSegments.push('Not an object');
   }
-  
-  // Validate the values in the user supplied segment property 
+
+  // Validate the values in the user supplied segment property
   // against the optionsSyntax array
   for (let i = 0; i < optionEntry.segments.length; i += 1) {
     if (optionEntry.segments[i] === '' || optionEntry.segments[i] === null) {
@@ -200,21 +208,33 @@ async function extractInfo() {
 }
 
 /**
- * @description Retrieve the contributors information from GitHub. When used as a context
- * the it is added as a new property at the root of the target object.
- * However, when used as a segment it is adding as a new property into its context in
- * the target object.
- * @param {Object} operation The matching entry from the operationOrder array for this object
+ * @description Retrieve the contributors information from GitHub.
+ * @param {Object} operation The matching entry from the operationOrder array
+ * for this object
  */
 async function getContributorsInfo(operation) {
-  const contributorsObject = new Contributors(operation.contextOwner, operation.contextName);
+  const contributorsObject =
+    new Contributors(operation.contextOwner, operation.contextName);
   await contributorsObject.fetchAllInfo();
   contextJSON[operation.context].contributors = contributorsObject.contributors;
 }
 
 /**
+ * @description Retrieve the events information from GitHub.
+ * @param {Object} operation The matching entry from the operationOrder array
+ * for this object
+ */
+async function getEventsInfo(operation) {
+  const eventsObject =
+    new Events(operation.contect, operation.contextOwner, operation.contextName);
+  await eventsObject.fetchAllInfo();
+  contextJSON[operation.context].events = eventsObject.events;
+}
+
+/**
  * @description Retrieve the repo information from GitHub
- * @param {Object} operation The matching entry from the operationOrder array for this object
+ * @param {Object} operation The matching entry from the operationOrder array
+ * for this object
  */
 async function getRepoInfo(operation) {
   const repoObject = new Repo(operation.contextOwner, operation.contextName);
@@ -228,7 +248,8 @@ async function getRepoInfo(operation) {
 
 /**
  * @description Retrieve the user information from GitHub
- * @param {Object} operation The matching entry from the operationOrder array for this object
+ * @param {Object} operation The matching entry from the operationOrder array
+ * for this object
  */
 async function getUserInfo(operation) {
   const userObject = new User(operation.contextName);
