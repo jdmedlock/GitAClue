@@ -1,5 +1,8 @@
 # Change Log
 
+### 0.2.0 - 03/28/2018
+- Added support for the new `events` segment to the `repo` context 
+ 
 ### 0.1.2 - 03/14/2018
 - Update change log format
 
