@@ -66,7 +66,7 @@ additional contexts and segments.
 | Context      | Context Owner | Context Name | Valid Segment Names |
 |:-------------|:--------------|:-------------|:--------------------|
 | user         | N/a           | Required     | N/a                 |
-| repo         | Required      | Required     | contributors        |
+| repo         | Required      | Required     | contributors, events |
 
 ### Return Value
 GitAClue returns a JSON string of the following format:
