@@ -37,6 +37,21 @@ describe('Test gitAClue.js functions', () => {
       assert.equal(JSON.parse(result).user.name, 'jdmedlock');
     });
 
+    it('should return true for a valid context - repo/events', async () => {
+      const option = [
+        {
+          context: 'repo',
+          contextOwner: 'jdmedlock',
+          contextName: 'GitAClue',
+          segments: ['events'],
+        },
+      ];
+      const result = await gitAClue.get(option);
+      assert.equal(JSON.parse(result).repo.owner, 'jdmedlock');
+      assert.equal(JSON.parse(result).repo.name, 'GitAClue');
+      assert.notEqual(JSON.parse(result).repo.events.length, 0, 'number of events > 0');
+    });
+    
     it('should return true for a valid context - no segments', async () => {
       const option = [
         { context: 'user', contextOwner: '', contextName: 'jdmedlock' },

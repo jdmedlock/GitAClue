@@ -68,15 +68,15 @@ module.exports = class Events {
   async fetchAllInfo() {
     const response = await GitHubInterface.fetchFromApi(this.apiUrl);
     for (let i = 0; i < response.data.length; i++) {
-      const payload = processEvent(response.data[i]);
+      const payload = this.processEvent(response.data[i]);
       this.events.push({
-        created_at: response.data[i].created_at,
-        id: response.data[i].id,
         type: response.data[i].type,
-        actor: response.data[i].actor.login,
         action: response.data[i].payload.action === undefined
           ? 'N/a'
           : response.data[i].payload.action,
+        id: response.data[i].id,
+        created_at: response.data[i].created_at,
+        actor: response.data[i].actor.login,
         payload: payload
       });
     }

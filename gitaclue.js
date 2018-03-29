@@ -1,5 +1,6 @@
 /* eslint-disable no-use-before-define */
 const Contributors = require('./src/Contributors');
+const Events = require('./src/Events');
 const Repo = require('./src/Repo');
 const User = require('./src/User');
 
@@ -130,7 +131,7 @@ function validateOptions(options) {
       contextName: `${options[i].contextName}`,
     });
 
-    const errorSegments = !isSegmentsValid(options[i], optionsSyntax[syntaxIndex]);
+    const errorSegments = isSegmentsValid(options[i], optionsSyntax[syntaxIndex]);
     if (errorSegments.length > 0) {
       resultJSON.error = `Invalid segments: ${errorSegments}`;
       return false;
@@ -166,7 +167,8 @@ function isSegmentsValid(optionEntry, syntaxEntry) {
     if (optionEntry.segments[i] === '' || optionEntry.segments[i] === null) {
       continue; /* eslint-disable no-continue */
     }
-    if (syntaxEntry.segments.indexOf(optionEntry.segments[i]) > -1) {
+    if (syntaxEntry.segments !== undefined && 
+        syntaxEntry.segments.indexOf(optionEntry.segments[i]) > -1) {
       operationOrder.push({
         type: 'segment',
         context: `${syntaxEntry.context}`,
@@ -226,7 +228,7 @@ async function getContributorsInfo(operation) {
  */
 async function getEventsInfo(operation) {
   const eventsObject =
-    new Events(operation.contect, operation.contextOwner, operation.contextName);
+    new Events(operation.context, operation.contextOwner, operation.contextName);
   await eventsObject.fetchAllInfo();
   contextJSON[operation.context].events = eventsObject.events;
 }
