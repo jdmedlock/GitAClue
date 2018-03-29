@@ -8,13 +8,14 @@ describe('Test gitAClue.js functions', () => {
     it('should return true for valid options - context and segments', async () => {
       const option = [
         {
-          context: 'repo', 
-          contextOwner: 'jdmedlock', 
-          contextName: 'GitAClue', 
+          context: 'repo',
+          contextOwner: 'jdmedlock',
+          contextName: 'GitAClue',
           segments: ['contributors'],
         },
       ];
       const result = await gitAClue.get(option);
+      assert.equal(JSON.parse(result).error, undefined);
       assert.equal(JSON.parse(result).repo.name, 'GitAClue');
     });
 
@@ -33,6 +34,7 @@ describe('Test gitAClue.js functions', () => {
         },
       ];
       const result = await gitAClue.get(option);
+      assert.equal(JSON.parse(result).error, undefined);
       assert.equal(JSON.parse(result).repo.name, 'GitAClue');
       assert.equal(JSON.parse(result).user.name, 'jdmedlock');
     });
@@ -47,16 +49,18 @@ describe('Test gitAClue.js functions', () => {
         },
       ];
       const result = await gitAClue.get(option);
+      assert.equal(JSON.parse(result).error, undefined);
       assert.equal(JSON.parse(result).repo.owner, 'jdmedlock');
       assert.equal(JSON.parse(result).repo.name, 'GitAClue');
       assert.notEqual(JSON.parse(result).repo.events.length, 0, 'number of events > 0');
     });
-    
+
     it('should return true for a valid context - no segments', async () => {
       const option = [
         { context: 'user', contextOwner: '', contextName: 'jdmedlock' },
       ];
       const result = await gitAClue.get(option);
+      assert.equal(JSON.parse(result).error, undefined);
       assert.equal(JSON.parse(result).user.name, 'jdmedlock');
     });
 
@@ -70,6 +74,7 @@ describe('Test gitAClue.js functions', () => {
         },
       ];
       const result = await gitAClue.get(option);
+      assert.equal(JSON.parse(result).error, undefined);
       assert.equal(JSON.parse(result).user.name, 'jdmedlock');
     });
 
@@ -83,6 +88,7 @@ describe('Test gitAClue.js functions', () => {
         },
       ];
       const result = await gitAClue.get(option);
+      assert.equal(JSON.parse(result).error, undefined);
       assert.equal(JSON.parse(result).user.name, 'jdmedlock');
     });
 
@@ -96,6 +102,7 @@ describe('Test gitAClue.js functions', () => {
         },
       ];
       const result = await gitAClue.get(option);
+      assert.equal(JSON.parse(result).error, undefined);
       assert.equal(JSON.parse(result).user.name, 'jdmedlock');
     });
 
@@ -109,6 +116,7 @@ describe('Test gitAClue.js functions', () => {
         },
       ];
       const result = await gitAClue.get(option);
+      assert.equal(JSON.parse(result).error, undefined);
       assert.equal(JSON.parse(result).user.name, 'jdmedlock');
     });
   });
