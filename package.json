@@ -20,7 +20,7 @@
     "test-all": "mocha --reporter min --require ./test/helper.js '+(test|validate)/**/*Spec.js'",
     "test-valid": "mocha --require ./test/helper.js './test/testUI_valid.Spec.js'",
     "test-invalid": "mocha --require ./test/helper.js './test/testUI_invalid.Spec.js'",
-    "test-one": "mocha --require ./test/helper.js './test/testGitAClue_single.Spec.js'",
+    "test-one": "mocha --require ./test/helper.js './test/testUI_single.Spec.js'",
     "test-repo": "mocha --require ./test/helper.js './test/testRepo.Spec.js'"
   },
   "repository": {

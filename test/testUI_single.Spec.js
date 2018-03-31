@@ -17,9 +17,10 @@ describe('Test gitAClue.js functions', () => {
       ];
       const result = await gitAClue.get(option);
       console.log('result: ', result);
+      assert.equal(JSON.parse(result).error, undefined);
       assert.equal(JSON.parse(result).repo.owner, 'jdmedlock');
       assert.notEqual(JSON.parse(result).repo.events.length, 0, 'number of events > 0');
     });
-    
+
   });
 });
