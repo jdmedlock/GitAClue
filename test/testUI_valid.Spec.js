@@ -5,7 +5,8 @@ import gitAClue from '../gitaclue';
 
 describe('Test gitAClue.js functions', () => {
   describe('Test options parameter with valid parameters', () => {
-    it('should return true for valid options - context and segments', async () => {
+    it('should return true for valid options - context and segments',
+      async () => {
       const option = [
         {
           context: 'repo',
@@ -19,7 +20,8 @@ describe('Test gitAClue.js functions', () => {
       assert.equal(JSON.parse(result).repo.name, 'GitAClue');
     });
 
-    it('should return true for valid options - multiple contexts and segments', async () => {
+    it('should return true for valid options - multiple contexts and segments',
+      async () => {
       const option = [
         {
           context: 'repo',
@@ -92,7 +94,8 @@ describe('Test gitAClue.js functions', () => {
       assert.equal(JSON.parse(result).user.name, 'jdmedlock');
     });
 
-    it('should return true for a valid context - null string array segments', async () => {
+    it('should return true for a valid context - null string array segments',
+      async () => {
       const option = [
         {
           context: 'user',
@@ -106,7 +109,8 @@ describe('Test gitAClue.js functions', () => {
       assert.equal(JSON.parse(result).user.name, 'jdmedlock');
     });
 
-    it('should return true for a valid context - null array segments', async () => {
+    it('should return true for a valid context - null array segments',
+      async () => {
       const option = [
         {
           context: 'user',
