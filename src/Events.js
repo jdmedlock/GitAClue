@@ -233,10 +233,27 @@ module.exports = class Events {
         };
         break;
       case 'PushEvent':
+        // Create a summary of all commits in this push
+        let commits = [];
+        console.log('entry: ', entry);
+        entry.payload.commits.forEach((element) => {
+          commits.push({
+            sha: element.id,
+            message: element.message,
+            timestamp: element.timestamp,
+            url: element.url,
+            author: element.author.username
+          });
+        });
+
+        // Create the payload describing the push
         payload = {
           ref: entry.payload.ref,
-          commits: entry.payload.size,
-          id: entry.payload.push_id
+          commits_count: entry.payload.size,
+          id: entry.payload.push_id,
+          before: entry.payload.before,
+          after: entry.payload.after,
+          commits: commits
         };
         break;
       case 'ReleaseEvent':
