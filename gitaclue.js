@@ -1,4 +1,5 @@
 /* eslint-disable no-use-before-define */
+const dotenv = require('dotenv');
 const Contributors = require('./src/Contributors');
 const Events = require('./src/Events');
 const Repo = require('./src/Repo');
@@ -61,6 +62,7 @@ let resultJSON = {};
  * parameter.
  */
 async function get(options) {
+  dotenv.config();
   operationOrder = [];
   if (validateOptions(options)) {
     await extractInfo(options);
@@ -167,7 +169,7 @@ function isSegmentsValid(optionEntry, syntaxEntry) {
     if (optionEntry.segments[i] === '' || optionEntry.segments[i] === null) {
       continue; /* eslint-disable no-continue */
     }
-    if (syntaxEntry.segments !== undefined && 
+    if (syntaxEntry.segments !== undefined &&
         syntaxEntry.segments.indexOf(optionEntry.segments[i]) > -1) {
       operationOrder.push({
         type: 'segment',

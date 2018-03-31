@@ -4,10 +4,14 @@ const validator = require('validator');
 module.exports = class GitHubInterface {
 
   /**
-   * @description Pass the supplied URL to Axios and return the JSON containing the results
+   * @description Pass the supplied URL to Axios and return the JSON containing
+   * the results. Basic authentication using a generic GitHub 'service' account
+   * is used to ensure that extended rate limits are used rather than the basic
+   * limit of 60/hour.
    * @static
    * @param {String} apiUrl The GitHub API URL for the desired data
-   * @returns {Object} A Promise which will be resolved with the response if successful
+   * @returns {Object} A Promise which will be resolved with the response if
+   * successful
    * @memberof GitHubInterface
    */
   static async fetchFromApi(apiUrl) {
@@ -15,7 +19,12 @@ module.exports = class GitHubInterface {
       throw new Error(`fetchFromAPI invalid apiUrl. apiUrl: ${apiUrl}`);
     }
     try {
-      const response = await axios.get(apiUrl)
+      const response = await axios.get(apiUrl, {
+        auth: {
+          user: process.env.ACCESS_ID,
+          pass: process.env.ACCESS_TOKEN,
+        }
+      });
       return response;
     }
     catch (error) {
