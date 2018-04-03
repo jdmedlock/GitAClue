@@ -9,5 +9,4 @@ script:
 - npm run test-valid
 - npm run test-invalid
 env:
-- ACCESS_ID=gitaclue
-- ACCESS_TOKEN=ca72873ab79a7c8a53c768853d91b74bad1b62e9
+- ACCESS_ID=gitaclue ACCESS_TOKEN=ca72873ab79a7c8a53c768853d91b74bad1b62e9
