@@ -198,6 +198,9 @@ async function extractInfo() {
     for (let j = 0; j < operationFunctions.length; j +=1) {
       const extractFunction = operationFunctions[j];
       if (extractFunction.object === operation.name) {
+        // If the operation to be executed is for a context then add the
+        // results accumulated for the previous context to the results
+        // object and start this operation with an empty context object
         if (operation.type === 'context' && contextJSON !== null) {
           Object.assign(resultJSON, resultJSON, contextJSON);
           contextJSON = {};
@@ -205,6 +208,8 @@ async function extractInfo() {
         await extractFunction.funcName(operation);
       }
     }
+    // Add the current context object to the results object when we hit
+    // the last operation
     if (i === operationOrder.length-1) {
       Object.assign(resultJSON, resultJSON, contextJSON);
     }
