@@ -193,8 +193,9 @@ function isSegmentsValid(optionEntry, syntaxEntry) {
  * @param {any} options User options object
  */
 async function extractInfo() {
+  let operation = null;
   for (let i = 0; i < operationOrder.length; i +=1) {
-    const operation = operationOrder[i];
+    operation = operationOrder[i];
     for (let j = 0; j < operationFunctions.length; j +=1) {
       const extractFunction = operationFunctions[j];
       if (extractFunction.object === operation.name) {
@@ -202,21 +203,18 @@ async function extractInfo() {
         // results accumulated for the previous context to the results
         // object and start this operation with an empty context object
         if (operation.type === 'context' && contextJSON !== null) {
-          Object.assign(resultJSON, resultJSON, contextJSON);
+          resultJSON = {...resultJSON, [operation.contextName]: contextJSON};
+          // Object.assign(resultJSON, resultJSON, contextJSON);
           contextJSON = {};
         }
         await extractFunction.funcName(operation);
       }
     }
-    // Add the current context object to the results object when we hit
-    // the last operation
-    /*
-    if (i === operationOrder.length-1) {
-      Object.assign(resultJSON, resultJSON, contextJSON);
-    }
-    */
   }
-  Object.assign(resultJSON, resultJSON, contextJSON);
+  // Add the current context object to the results object when we hit
+  // the last operation
+  // Object.assign(resultJSON, resultJSON, contextJSON);
+  resultJSON = {...resultJSON, [operation.contextName]: contextJSON};
 }
 
 /**

@@ -38,8 +38,9 @@ describe('Test gitAClue.js functions', () => {
       const result = await gitAClue.get(option);
       console.log('result: ', result);
       assert.equal(JSON.parse(result).error, undefined);
-      assert.equal(JSON.parse(result).repo.name, 'GitAClue');
-      assert.equal(JSON.parse(result).user.name, 'jdmedlock');
+      assert.equal(JSON.parse(result).jdmedlock.user.name, 'jdmedlock');
+      assert.equal(JSON.parse(result).GitAClue.name, 'GitAClue');
+      assert.equal(JSON.parse(result).jdmedlock.user.name, 'jdmedlock');
     });
 
   });
