@@ -210,10 +210,13 @@ async function extractInfo() {
     }
     // Add the current context object to the results object when we hit
     // the last operation
+    /*
     if (i === operationOrder.length-1) {
       Object.assign(resultJSON, resultJSON, contextJSON);
     }
+    */
   }
+  Object.assign(resultJSON, resultJSON, contextJSON);
 }
 
 /**
