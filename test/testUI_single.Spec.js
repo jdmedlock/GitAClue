@@ -26,6 +26,11 @@ describe('Test gitAClue.js functions', () => {
         {
           context: 'repo',
           contextOwner: 'jdmedlock',
+          contextName: 'voyageevents',
+        },
+        {
+          context: 'repo',
+          contextOwner: 'jdmedlock',
           contextName: 'GitAClue',
           segments: ['contributors'],
         },
@@ -38,8 +43,8 @@ describe('Test gitAClue.js functions', () => {
       const result = await gitAClue.get(option);
       console.log('result: ', result);
       assert.equal(JSON.parse(result).error, undefined);
-      assert.equal(JSON.parse(result).GitAClue.repo.name, 'GitAClue');
-      assert.equal(JSON.parse(result).jdmedlock.user.name, 'jdmedlock');
+      assert.equal(JSON.parse(result).repo.name, 'GitAClue');
+      assert.equal(JSON.parse(result).user.name, 'jdmedlock');
     });
 
   });
