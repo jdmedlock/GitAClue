@@ -199,22 +199,22 @@ async function extractInfo() {
     for (let j = 0; j < operationFunctions.length; j +=1) {
       const extractFunction = operationFunctions[j];
       if (extractFunction.object === operation.name) {
-        // If the operation to be executed is for a context then add the
-        // results accumulated for the previous context to the results
-        // object and start this operation with an empty context object
+        // If the operation to be executed is for a context then start
+        // this operation with an empty context object
         if (operation.type === 'context' && contextJSON !== null) {
-          resultJSON = {...resultJSON, [operation.contextName]: contextJSON};
-          // Object.assign(resultJSON, resultJSON, contextJSON);
           contextJSON = {};
         }
         await extractFunction.funcName(operation);
+        if (operation.type === 'context' && contextJSON !== null) {
+          // Add the context to the result
+          resultJSON = {...resultJSON, [operation.contextName]: contextJSON};
+        } else {
+          // Add a segment to the result
+          resultJSON = {...resultJSON, [operation.name]: contextJSON};
+        }
       }
     }
   }
-  // Add the current context object to the results object when we hit
-  // the last operation
-  // Object.assign(resultJSON, resultJSON, contextJSON);
-  resultJSON = {...resultJSON, [operation.contextName]: contextJSON};
 }
 
 /**
