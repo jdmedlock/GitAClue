@@ -43,8 +43,7 @@ const operationFunctions = [
   {object: 'user', funcName: getUserInfo},
 ];
 
-let contextJSON = {};
-let resultJSON = {};
+let resultObject = {};
 
 /**
  * @description Retrieve a set of contexts and segments from the GitHub API
@@ -67,7 +66,7 @@ async function get(options) {
   if (validateOptions(options)) {
     await extractInfo(options);
   }
-  const finalResult = JSON.stringify(resultJSON, null, 2);
+  const finalResult = JSON.stringify(resultObject, null, 2);
   return finalResult;
 }
 
@@ -79,7 +78,7 @@ async function get(options) {
 function validateOptions(options) {
 
   if (options === null || options === undefined || typeof options !== 'object') {
-    resultJSON.error = 'option parameter is null, undefined, or not an object';
+    resultObject.error = 'option parameter is null, undefined, or not an object';
     return false;
   }
 
@@ -95,7 +94,7 @@ function validateOptions(options) {
 
     if (options[i].context === null || options[i].context === undefined ||
         typeof options[i].context !== 'string') {
-      resultJSON.error = 'context is null, undefined, or not a string';
+      resultObject.error = 'context is null, undefined, or not a string';
       return false;
     }
 
@@ -103,7 +102,7 @@ function validateOptions(options) {
     // optionsSyntax array
     const syntaxIndex = findOptionsSyntax(i);
     if (syntaxIndex === -1) {
-      resultJSON.error = 'unknown context specified';
+      resultObject.error = 'unknown context specified';
       return false;
     }
 
@@ -111,7 +110,7 @@ function validateOptions(options) {
     if (optionsSyntax[syntaxIndex].contextOwner !== undefined) {
       if (options[i].contextOwner === null || options[i].contextOwner === undefined ||
           typeof options[i].contextOwner !== 'string') {
-        resultJSON.error = 'contextOwner is null, undefined, or not a string';
+        resultObject.error = 'contextOwner is null, undefined, or not a string';
         return false;
       }
     }
@@ -120,7 +119,7 @@ function validateOptions(options) {
     if (optionsSyntax[syntaxIndex].contextName !== undefined) {
       if (options[i].contextName === null || options[i].contextName === undefined ||
           typeof options[i].contextName !== 'string') {
-        resultJSON.error = 'contextName is null, undefined, or not a string';
+        resultObject.error = 'contextName is null, undefined, or not a string';
         return false;
       }
     }
@@ -135,7 +134,7 @@ function validateOptions(options) {
 
     const errorSegments = isSegmentsValid(options[i], optionsSyntax[syntaxIndex]);
     if (errorSegments.length > 0) {
-      resultJSON.error = `Invalid segments: ${errorSegments}`;
+      resultObject.error = `Invalid segments: ${errorSegments}`;
       return false;
     }
   }
@@ -159,7 +158,7 @@ function isSegmentsValid(optionEntry, syntaxEntry) {
     return errorSegments;
   }
   if (typeof optionEntry.segments !== 'object') {
-    resultJSON.error = 'segments is not an array';
+    resultObject.error = 'segments is not an array';
     return errorSegments.push('Not an object');
   }
 
@@ -183,33 +182,33 @@ function isSegmentsValid(optionEntry, syntaxEntry) {
     }
   }
   if (errorSegments.length > 0) {
-    resultJSON.error = 'segments contains one or more invalid entries';
+    resultObject.error = 'segments contains one or more invalid entries';
   }
   return errorSegments;
 }
 
 /**
- * @description Extract information from GitHub and build the response JSON
+ * @description Extract information from GitHub and build the response object
  * @param {any} options User options object
  */
 async function extractInfo() {
+  let contextObject = {};
   let operation = null;
   let contextNo = 0;
-  let segmentNo = 0;
   for (let i = 0; i < operationOrder.length; i +=1) {
     operation = operationOrder[i];
     for (let j = 0; j < operationFunctions.length; j +=1) {
       const extractFunction = operationFunctions[j];
       if (extractFunction.object === operation.name) {
-        // If the operation to be executed is for a context then start
+        // If the operation to be executed is for a new context then start
         // this operation with an empty context object
-        if (operation.type === 'context' && contextJSON !== null) {
-          contextJSON = {};
+        if (operation.type === 'context' && contextObject !== null) {
+          contextObject = {};
         }
-        await extractFunction.funcName(operation);
+        await extractFunction.funcName(contextObject, operation);
         if (operation.type === 'context') {
-          // Add the context to the result
-          resultJSON = {...resultJSON, [contextNo]: contextJSON};
+          // Add the context or segment to the current context object
+          resultObject = {...resultObject, [contextNo]: contextObject};
           contextNo += 1;
         }
       }
@@ -219,55 +218,63 @@ async function extractInfo() {
 
 /**
  * @description Retrieve the contributors information from GitHub.
+ * @param {Object} contextObject The current context this information is
+ * related to and therefore should be added to
  * @param {Object} operation The matching entry from the operationOrder array
  * for this object
  */
-async function getContributorsInfo(operation) {
+async function getContributorsInfo(contextObject, operation) {
   const contributorsObject =
     new Contributors(operation.contextOwner, operation.contextName);
   await contributorsObject.fetchAllInfo();
-  contextJSON[operation.context].contributors = contributorsObject.contributors;
+  contextObject[operation.context].contributors = contributorsObject.contributors;
 }
 
 /**
  * @description Retrieve the events information from GitHub.
+ * @param {Object} contextObject The current context this information is
+ * related to and therefore should be added to
  * @param {Object} operation The matching entry from the operationOrder array
  * for this object
  */
-async function getEventsInfo(operation) {
+async function getEventsInfo(contextObject, operation) {
   const eventsObject =
     new Events(operation.context, operation.contextOwner, operation.contextName);
   await eventsObject.fetchAllInfo();
-  contextJSON[operation.context].events = eventsObject.events;
+  contextObject[operation.context].events = eventsObject.events;
 }
 
 /**
  * @description Retrieve the repo information from GitHub
+ * @param {Object} contextObject The current context this information is
+ * related to and therefore should be added to
  * @param {Object} operation The matching entry from the operationOrder array
  * for this object
  */
-async function getRepoInfo(operation) {
+async function getRepoInfo(contextObject, operation) {
   const repoObject = new Repo(operation.contextOwner, operation.contextName);
   await repoObject.fetchInfo();
   if (operation.type === 'context') {
-    contextJSON.repo = repoObject;
+    contextObject.repo = repoObject;
   } else {
-    contextJSON[operation.context].repo = repoObject;
+    contextObject[operation.context].repo = repoObject;
   }
 }
 
 /**
  * @description Retrieve the user information from GitHub
+ * @param {Object} contextObject The current context this information is
+ * related to and therefore should be added to
  * @param {Object} operation The matching entry from the operationOrder array
  * for this object
  */
-async function getUserInfo(operation) {
+async function getUserInfo(contextObject, operation) {
   const userObject = new User(operation.contextName);
   await userObject.fetchInfo();
   if (operation.type === 'context') {
-    contextJSON.user = userObject;
+    contextObject.user = userObject;
   } else {
-    contextJSON[operation.context].user = userObject;
+    contextObject[operation.context].user = userObject;
   }
 }
 
