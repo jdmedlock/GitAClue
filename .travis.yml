@@ -1,21 +1,12 @@
-#
-# File:        travis.yml
-# Description: Define the continuous integration environment and rules (including tests) to be 
-#              executed whenever changes are promoted to the "development" branch in GitHub.
-#              At this time TravisCI is used only for continuous testing, but the longer term
-#              vision is to run this whenever changes are promoted to the "development" 
-#              branch and to deploy to the Production runtime environment as long as all
-#              tests pass.
-#
 language: node_js
 node_js:
-  - 6
+- 6
 cache:
   yarn: true
   directories:
-    - node_modules
+  - node_modules
 script:
-#  - yarn lint
-  - npm run test
-
-
+- npm run test-valid
+- npm run test-invalid
+env:
+- ACCESS_ID=gitaclue ACCESS_TOKEN=ca72873ab79a7c8a53c768853d91b74bad1b62e9

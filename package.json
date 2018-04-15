@@ -8,10 +8,12 @@
   },
   "dependencies": {
     "axios": "^0.18.0",
+    "dotenv": "^5.0.1",
     "validator": "^9.4.1"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "babel-preset-env": "^1.6.1",
     "chai": "^4.1.2",
     "mocha": "^5.0.4"
@@ -20,7 +22,7 @@
     "test-all": "mocha --reporter min --require ./test/helper.js '+(test|validate)/**/*Spec.js'",
     "test-valid": "mocha --require ./test/helper.js './test/testUI_valid.Spec.js'",
     "test-invalid": "mocha --require ./test/helper.js './test/testUI_invalid.Spec.js'",
-    "test-one": "mocha --require ./test/helper.js './test/testGitAClue_single.Spec.js'",
+    "test-one": "mocha --require ./test/helper.js './test/testUI_single.Spec.js'",
     "test-repo": "mocha --require ./test/helper.js './test/testRepo.Spec.js'"
   },
   "repository": {
