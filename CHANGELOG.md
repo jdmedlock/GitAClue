@@ -1,5 +1,11 @@
 # Change Log
 
+### 1.0.0 - 04/15/2018
+- Resolve issue [#31](https://github.com/jdmedlock/GitAClue/issues/31). Note
+that this changes the format of the result JSON returned to callers of the
+`get` function. Consult the projects
+[README](https://github.com/jdmedlock/GitAClue) for details.
+
 ### 0.3.0 - 03/28/2018
 - Added support for the new `events` segment to the `repo` context
 
