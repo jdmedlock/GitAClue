@@ -183,6 +183,7 @@ module.exports = class Events {
       case 'MarketplacePurchaseEvent':
         break;
       case 'MemberEvent':
+        console.log('MemberEvent entry: ', entry);
         break;
       case 'MembershipEvent':
         break;
@@ -233,10 +234,25 @@ module.exports = class Events {
         };
         break;
       case 'PushEvent':
+        // Create a summary of all commits in this push
+        let commits = [];
+        entry.payload.commits.forEach((element) => {
+          commits.push({
+            sha: element.sha,
+            author: element.author.name,
+            url: element.url,
+            message: element.message,
+          });
+        });
+
+        // Create the payload describing the push
         payload = {
           ref: entry.payload.ref,
-          commits: entry.payload.size,
-          id: entry.payload.push_id
+          commits_count: entry.payload.size,
+          id: entry.payload.push_id,
+          before: entry.payload.before,
+          after: entry.payload.after,
+          commits: commits,
         };
         break;
       case 'ReleaseEvent':
