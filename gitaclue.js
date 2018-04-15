@@ -195,6 +195,7 @@ function isSegmentsValid(optionEntry, syntaxEntry) {
 async function extractInfo() {
   let operation = null;
   let contextNo = 0;
+  let segmentNo = 0;
   for (let i = 0; i < operationOrder.length; i +=1) {
     operation = operationOrder[i];
     for (let j = 0; j < operationFunctions.length; j +=1) {
@@ -205,17 +206,11 @@ async function extractInfo() {
         if (operation.type === 'context' && contextJSON !== null) {
           contextJSON = {};
         }
-        console.log(`extractInfo - contextNo: ${contextNo} segmentNo: ${segmentNo}`);
-        console.log('...operation: ', operation);
         await extractFunction.funcName(operation);
         if (operation.type === 'context') {
           // Add the context to the result
           resultJSON = {...resultJSON, [contextNo]: contextJSON};
-          console.log('...resultJSON.[contextNo].repo.name')
           contextNo += 1;
-        } else {
-          // Add a segment to the result
-          resultJSON = {...resultJSON, [segmentNo]: contextJSON};
         }
       }
     }
