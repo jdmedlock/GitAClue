@@ -61,7 +61,7 @@ let resultObject = {};
  * parameter.
  */
 async function get(options) {
-  dotenv.config();
+  dotenv.config({path: __dirname + '/.env'});
   operationOrder = [];
   if (validateOptions(options)) {
     await extractInfo(options);

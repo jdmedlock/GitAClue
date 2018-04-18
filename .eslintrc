@@ -1,4 +1,5 @@
 {
+  "esversion": 6,
   "extends": "airbnb",
   "env": {
     "browser": true,
