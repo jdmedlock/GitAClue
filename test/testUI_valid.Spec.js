@@ -5,6 +5,19 @@ import gitAClue from '../gitaclue';
 
 describe('Test gitAClue.js functions', () => {
   describe('Test options parameter with valid parameters', () => {
+
+    it('should return true for valid options - rate limit of 5000',
+      async () => {
+      const option = [
+        {
+          context: 'ratelimit',
+        },
+      ];
+      const result = await gitAClue.get(option);
+      assert.equal(JSON.parse(result).error, undefined);
+      assert.equal(JSON.parse(result)[0].rate.limit, 5000);
+    });
+
     it('should return true for valid options - context and segments',
       async () => {
       const option = [
