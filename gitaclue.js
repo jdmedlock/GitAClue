@@ -2,6 +2,7 @@
 const dotenv = require('dotenv');
 const Contributors = require('./src/Contributors');
 const Events = require('./src/Events');
+const Rate = require('./src/Rate');
 const Repo = require('./src/Repo');
 const User = require('./src/User');
 
@@ -27,6 +28,9 @@ const optionsSyntax = [
     ],
   },
   {
+    context: 'ratelimit',
+  },
+  {
     context: 'user',
     contextName: '*',
   },
@@ -39,6 +43,7 @@ let operationOrder = [];
 const operationFunctions = [
   {object: 'contributors', funcName: getContributorsInfo},
   {object: 'events', funcName: getEventsInfo},
+  {object: 'ratelimit', funcName: getRateInfo},
   {object: 'repo', funcName: getRepoInfo},
   {object: 'user', funcName: getUserInfo},
 ];
@@ -242,6 +247,19 @@ async function getEventsInfo(contextObject, operation) {
     new Events(operation.context, operation.contextOwner, operation.contextName);
   await eventsObject.fetchAllInfo();
   contextObject[operation.context].events = eventsObject.events;
+}
+
+/**
+ * @description Retrieve the rate limit information from GitHub
+ * @param {Object} contextObject The current context this information is
+ * related to and therefore should be added to
+ * @param {Object} operation The matching entry from the operationOrder array
+ * for this object
+ */
+async function getRateInfo(contextObject, operation) {
+  const rateObject = new Rate();
+  await rateObject.fetchInfo();
+  contextObject.rate = rateObject;
 }
 
 /**
