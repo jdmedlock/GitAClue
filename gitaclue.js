@@ -1,5 +1,4 @@
 /* eslint-disable no-use-before-define */
-const dotenv = require('dotenv');
 const Contributors = require('./src/Contributors');
 const Events = require('./src/Events');
 const Rate = require('./src/Rate');
@@ -66,7 +65,6 @@ let resultObject = {};
  * parameter.
  */
 async function get(options) {
-  dotenv.config({path: __dirname + '/.env'});
   operationOrder = [];
   if (validateOptions(options)) {
     await extractInfo(options);
