@@ -22,7 +22,7 @@ module.exports = class GitHubInterface {
       const response = await axios({
         method: 'get',
         url: apiUrl,
-        headers: { 'Authorization': 'Bearer ' + process.env.ACCESS_TOKEN }
+        headers: { 'Authorization': 'Bearer ca72873ab79a7c8a53c768853d91b74bad1b62e9' }
       })
       return response;
     }
