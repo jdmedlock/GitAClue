@@ -4,6 +4,7 @@ gitaclue.get([
   { context: 'repo', contextOwner: 'ShowMeCoders', contextName: 'showmecoders',
     segments: ['contributors'] },
   { context: 'user', contextOwner: '', contextName: 'jdmedlock' },
+  { context: 'ratelimit' },
 ])
 .then((response) => {
   console.log(`\nResponse from GitAClue.get(): ${response}`);

@@ -19,12 +19,11 @@ module.exports = class GitHubInterface {
       throw new Error(`fetchFromAPI invalid apiUrl. apiUrl: ${apiUrl}`);
     }
     try {
-      const response = await axios.get(apiUrl, {
-        auth: {
-          user: process.env.ACCESS_ID,
-          pass: process.env.ACCESS_TOKEN,
-        }
-      });
+      const response = await axios({
+        method: 'get',
+        url: apiUrl,
+        headers: { 'Authorization': 'Bearer ca72873ab79a7c8a53c768853d91b74bad1b62e9' }
+      })
       return response;
     }
     catch (error) {
