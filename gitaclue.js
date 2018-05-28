@@ -1,6 +1,7 @@
 /* eslint-disable no-use-before-define */
 const Contributors = require('./src/Contributors');
 const Events = require('./src/Events');
+const Organization = require('./src/Organization');
 const Rate = require('./src/Rate');
 const Repo = require('./src/Repo');
 const User = require('./src/User');
@@ -17,6 +18,13 @@ const User = require('./src/User');
 //   other value must exactly match the value provided by the user
 // - It is valid for a context to also be a segment within another context.
 const optionsSyntax = [
+  {
+    context: 'organization',
+    contextName: '*',
+    segments: [
+      'repolist',
+    ],
+  },
   {
     context: 'repo',
     contextOwner: '*',
@@ -40,11 +48,13 @@ const optionsSyntax = [
 // JSON string returned to the caller.
 let operationOrder = [];
 const operationFunctions = [
-  {object: 'contributors', funcName: getContributorsInfo},
-  {object: 'events', funcName: getEventsInfo},
-  {object: 'ratelimit', funcName: getRateInfo},
-  {object: 'repo', funcName: getRepoInfo},
-  {object: 'user', funcName: getUserInfo},
+  { object: 'contributors', funcName: getContributorsInfo },
+  { object: 'events', funcName: getEventsInfo },
+  { object: 'organization', funcName: getOrgInfo },
+  { object: 'ratelimit', funcName: getRateInfo },
+  { object: 'repo', funcName: getRepoInfo },
+  { object: 'repolist', funcName: getRepoList },
+  { object: 'user', funcName: getUserInfo },
 ];
 
 let resultObject = {};
@@ -248,6 +258,19 @@ async function getEventsInfo(contextObject, operation) {
 }
 
 /**
+ * @description Retrieve the organization information from GitHub
+ * @param {Object} contextObject The current context this information is
+ * related to and therefore should be added to
+ * @param {Object} operation The matching entry from the operationOrder array
+ * for this object
+ */
+async function getOrgInfo(contextObject, operation) {
+  const orgObject = new Organization(operation.contextName);
+  await orgObject.fetchInfo();
+  contextObject.orgObject = orgObject;
+}
+
+/**
  * @description Retrieve the rate limit information from GitHub
  * @param {Object} contextObject The current context this information is
  * related to and therefore should be added to
@@ -275,6 +298,18 @@ async function getRepoInfo(contextObject, operation) {
   } else {
     contextObject[operation.context].repo = repoObject;
   }
+}
+
+/**
+ * @description Retrieve the list of repos from GitHub
+ * @param {Object} contextObject The current context this information is
+ * related to and therefore should be added to
+ * @param {Object} operation The matching entry from the operationOrder array
+ * for this object
+ */
+async function getRepoList(contextObject, operation) {
+  const repoList = await contextObject.orgObject.getRepoList();
+  contextObject.repoList = repoList;
 }
 
 /**

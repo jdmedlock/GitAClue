@@ -1,5 +1,10 @@
 # Change Log
 
+### 1.2.0 - 05/28/2018
+- Add a new context `organization` to retrieve information about an Organization.
+- Add a new segment `repolist` to list repo owners and names within an
+Organization
+
 ### 1.1.0 - 04/18/2018
 - Resolve issue [#35](https://github.com/jdmedlock/GitAClue/issues/35)
 - Add a new context `ratelimit` to retrieve the current GitHub API V3 rate limit

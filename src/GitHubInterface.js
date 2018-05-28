@@ -23,7 +23,7 @@ module.exports = class GitHubInterface {
         method: 'get',
         url: apiUrl,
         headers: { 'Authorization': 'Bearer ca72873ab79a7c8a53c768853d91b74bad1b62e9' }
-      })
+      });
       return response;
     }
     catch (error) {

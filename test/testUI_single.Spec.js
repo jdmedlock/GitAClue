@@ -2,6 +2,7 @@
 import assert from 'assert';
 import './registerBabel';
 import gitAClue from '../gitaclue';
+import Organization from '../src/Organization.js';
 
 describe('Test gitAClue.js functions', () => {
   describe('Test options parameter with valid parameters', () => {
@@ -24,28 +25,16 @@ describe('Test gitAClue.js functions', () => {
       */
       const option = [
         {
-          context: 'repo',
-          contextOwner: 'jdmedlock',
-          contextName: 'voyageevents',
-        },
-        {
-          context: 'repo',
-          contextOwner: 'jdmedlock',
-          contextName: 'GitAClue',
-          segments: ['contributors'],
-        },
-        {
-          context: 'user',
-          contextName: 'jdmedlock',
-          segments: [''],
+          context: 'organization',
+          contextName: 'chingu-voyage4',
+          segments: ['repolist'],
         },
       ];
       const result = await gitAClue.get(option);
       console.log('result: ', result);
       assert.equal(JSON.parse(result).error, undefined);
-      assert.equal(JSON.parse(result)[1].repo.name, 'GitAClue');
-      assert.equal(JSON.parse(result)[2].user.name, 'jdmedlock');
+      assert.equal(JSON.parse(result)[0].orgObject.name, 'chingu-voyage4');
+      assert.notEqual(JSON.parse(result)[0].repoList.length, 0, 'number of repos > 0');
     });
-
   });
 });

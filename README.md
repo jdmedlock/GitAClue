@@ -65,6 +65,7 @@ additional contexts and segments.
 
 | Context      | Context Owner | Context Name | Valid Segment Names |
 |:-------------|:--------------|:-------------|:--------------------|
+| organization | N/a           | Required     | repolist            |
 | ratelimit    | N/a           | N/a          | N/a                 |
 | repo         | Required      | Required     | contributors, events |
 | user         | N/a           | Required     | N/a                 |
