@@ -1,4 +1,5 @@
 const GitHubInterface = require('./GitHubInterface');
+const PaginatedUrl = require('./PaginatedUrl');
 
 module.exports = class Organization {
   /**
@@ -38,9 +39,16 @@ module.exports = class Organization {
    * name of each repo associated with this Organization.
    */
   async getRepoList() {
+    const reposUrl = new PaginatedUrl(this.repos_url);
+    while (reposUrl.hasMorePages()) {
+      // TODO: Resume coding here
+    }
+    /*
     const response = await GitHubInterface.fetchFromApi(this.repos_url);
+    console.log('response: ', response);
     return response.data.map((element) => {
       return {owner: element.owner.login, repoName: element.name};
     }, []);
+    */
   }
 };
